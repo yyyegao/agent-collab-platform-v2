@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import type { AgentConfig } from '../store';
 
+const AVATAR_COLORS = [
+  '#e85d04', '#0077b6', '#00b4d8', '#2dc653', '#7b2cbf',
+  '#e63946', '#457b9d', '#f4a261', '#264653', '#b5179e',
+];
+
+const AvatarSVG = ({ size = 48 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#e85d04"/>
+    <circle cx="24" cy="20" r="8" fill="white" fillOpacity="0.9"/>
+    <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="white" strokeWidth="2.5" strokeLinecap="round" fillOpacity="0.9"/>
+  </svg>
+);
+
 const AvatarSVG = ({ size = 48 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="48" height="48" rx="12" fill="#e85d04"/>
@@ -33,7 +46,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
     agent || {
       id: '',
       name: '',
-      avatar: '',
+      avatar: AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)],
       description: '',
       capabilities: [],
       provider: 'openai',
@@ -50,7 +63,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
     setFormData(agent || {
       id: '',
       name: '',
-      avatar: '',
+      avatar: AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)],
       description: '',
       capabilities: [],
       provider: 'openai',
@@ -72,6 +85,8 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
   if (!isOpen) return null;
 
 
+
+  const avatarColor = AVATAR_COLORS.includes(formData.avatar) ? formData.avatar : AVATAR_COLORS[0];
 
   return (
     <div
@@ -99,7 +114,9 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
 
         {/* Scrollable form area + fixed footer buttons */}
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-            return (
+            const avatarColor = AVATAR_COLORS.includes(formData.avatar) ? formData.avatar : AVATAR_COLORS[0];
+
+  return (
     <form id="agent-form" className="flex-1 overflow-y-auto px-6 py-4 space-y-4" onSubmit={e => { e.preventDefault(); handleSave(); }}>
             {/* Avatar */}
             <div className="flex items-center gap-4">
@@ -108,7 +125,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
                   <img src={formData.avatar} alt={formData.name} className="w-full h-full object-cover rounded-2xl" />
                 ) : (
                   formData.name[0]?.toUpperCase() || 'A'
-                )}
+                }
               </div>
               <div className="flex-1">
                 <label className="label-warm">头像 URL</label>
@@ -281,7 +298,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
               >
                 删除
               </button>
-            )}
+            }
             <div className="flex-1" />
             <button
               type="button"
