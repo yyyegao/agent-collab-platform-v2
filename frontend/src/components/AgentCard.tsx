@@ -1,13 +1,5 @@
 import React from 'react';
 import { AgentConfig } from '../types';
-
-const AvatarSVG = ({ size = 48 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#e85d04"/>
-    <circle cx="24" cy="20" r="8" fill="white" fillOpacity="0.9"/>
-    <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="white" strokeWidth="2.5" strokeLinecap="round" fillOpacity="0.9"/>
-  </svg>
-);
 import { useAppStore } from '../store';
 
 interface AgentCardProps {
@@ -46,16 +38,16 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent, onDragStart, onEdit
       draggable
       onDragStart={onDragStart}
       onClick={() => { selectAgent(agent.id); }}
-      className={`card-warm p-4 cursor-pointer group transition-all h-[180px] overflow-hidden flex flex-col ${
+      className={`card-warm p-4 cursor-pointer group transition-all ${
         isSelected ? 'ring-2 ring-accent-orange border-accent-orange' : ''
       }`}
     >
       <div className="flex items-start gap-3">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
           {agent.avatar ? (
             <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover rounded-2xl" />
           ) : (
-            <AvatarSVG size={56} />
+            agent.name[0]?.toUpperCase()
           )}
         </div>
         
@@ -79,7 +71,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent, onDragStart, onEdit
       </div>
       
       {agent.capabilities.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-warm-200 max-h-[52px] overflow-hidden">
+        <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-warm-200">
           {agent.capabilities.slice(0, 5).map((cap) => (
             <span
               key={cap}
