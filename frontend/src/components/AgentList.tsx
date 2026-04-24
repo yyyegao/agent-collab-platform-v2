@@ -80,7 +80,7 @@ export const AgentList: React.FC = () => {
           <h2 className="text-xl font-bold text-gray-900">Agent 列表</h2>
           <p className="text-sm text-gray-500">管理你的 Agent 团队</p>
         </div>
-        <button onClick={handleAddAgent} className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-primary-dark">
+        <button onClick={handleAddAgent} className="w-10 h-10 rounded-xl bg-accent-orange text-white flex items-center justify-center hover:bg-accent-orange-dark">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
         </button>
       </div>
@@ -126,7 +126,7 @@ export const AgentList: React.FC = () => {
           </div>
           <p className="text-gray-500 mb-2">还没有 Agent</p>
           <p className="text-sm text-gray-400 mb-4">点击 + 添加你的第一个 Agent</p>
-          <button onClick={handleAddAgent} className="px-4 py-2 rounded-xl bg-primary text-white font-medium">添加 Agent</button>
+          <button onClick={handleAddAgent} className="px-4 py-2 rounded-xl bg-accent-orange text-white font-medium">添加 Agent</button>
         </div>
       )}
 
