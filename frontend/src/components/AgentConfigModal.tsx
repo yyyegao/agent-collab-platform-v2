@@ -155,7 +155,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
                   value={formData.description}
                   onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="描述这个 Agent 的职责和能力..."
-                  className="input-warm min-h-[80px] max-h-[120px] overflow-y-auto resize-none"
+                  className="input-warm h-[80px] overflow-hidden resize-none"
                 />
               </div>
 
@@ -279,7 +279,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
                   value={formData.systemPrompt}
                   onChange={e => setFormData(prev => ({ ...prev, systemPrompt: e.target.value }))}
                   placeholder="设定 Agent 的角色和行为..."
-                  className="input-warm min-h-[100px] max-h-[150px] overflow-y-auto resize-none"
+                  className="input-warm h-[100px] overflow-hidden resize-none"
                 />
               </div>
 

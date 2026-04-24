@@ -18,7 +18,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { AgentConfig } from '../types';
 import { AgentCard } from './AgentCard';
-import { AgentConfigModal } from './AgentConfigModal';
+import AgentConfigModal from './AgentConfigModal';
 import { useAppStore } from '../store';
 
 const SortableAgentCard: React.FC<{ agent: AgentConfig; onEdit: (a: AgentConfig) => void }> = ({ agent, onEdit }) => {
