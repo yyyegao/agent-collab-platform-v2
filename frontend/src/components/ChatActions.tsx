@@ -77,12 +77,12 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
         <button
           onClick={() => setShowMenu(!showMenu)}
           disabled={!hasMessages}
-          className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${
+          className={`p-2 rounded-lg hover:bg-warm-100 transition-colors ${
             !hasMessages ? 'opacity-50 cursor-not-allowed' : ''
           }`}
           title="更多操作"
         >
-          <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-txt-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
           </svg>
         </button>
@@ -96,7 +96,7 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
                 const importBtn = document.getElementById('import-btn');
                 if (importBtn) importBtn.click();
               }}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm hover:bg-warm-50 flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -106,7 +106,7 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
             <button
               onClick={handleExport}
               disabled={!hasMessages}
-              className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 ${
+              className={`w-full px-4 py-2 text-left text-sm hover:bg-warm-50 flex items-center gap-2 ${
                 !hasMessages ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -139,7 +139,7 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
               <h3 className="font-semibold">导出聊天记录</h3>
               <button
                 onClick={() => setShowExport(false)}
-                className="p-1 hover:bg-gray-100 rounded-lg"
+                className="p-1 hover:bg-warm-100 rounded-lg"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -147,20 +147,20 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
               </button>
             </div>
             <div className="flex-1 overflow-auto p-4">
-              <pre className="text-sm text-gray-600 whitespace-pre-wrap font-mono bg-gray-50 p-3 rounded-lg max-h-96 overflow-auto">
+              <pre className="text-sm text-txt-secondary whitespace-pre-wrap font-mono bg-warm-50 p-3 rounded-lg max-h-96 overflow-auto">
                 {exportContent}
               </pre>
             </div>
             <div className="px-4 py-3 border-t border-gray-200 flex justify-end gap-2">
               <button
                 onClick={handleCopy}
-                className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+                className="px-4 py-2 text-sm text-txt-secondary hover:bg-warm-100 rounded-lg"
               >
                 复制到剪贴板
               </button>
               <button
                 onClick={handleDownload}
-                className="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark"
+                className="px-4 py-2 text-sm bg-accent-orange text-white rounded-lg hover:bg-orange-600"
               >
                 下载 Markdown
               </button>

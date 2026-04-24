@@ -112,8 +112,8 @@ export const MessageInput: React.FC = () => {
   // 如果是群聊模式且没有选择群聊，显示提示
   if (chatMode === 'group' && !currentGroupId) {
     return (
-      <div className="bg-white border-t border-gray-200 p-4">
-        <p className="text-center text-gray-400 text-sm">请先选择一个群聊</p>
+      <div className="bg-white border-t border-warm-200 p-4">
+        <p className="text-center text-txt-muted text-sm">请先选择一个群聊</p>
       </div>
     );
   }
@@ -121,46 +121,44 @@ export const MessageInput: React.FC = () => {
   // 单聊模式没有选择会话
   if (chatMode === 'single' && !currentSingleSessionId) {
     return (
-      <div className="bg-white border-t border-gray-200 p-4">
-        <p className="text-center text-gray-400 text-sm">请先选择一个 Agent 开始对话</p>
+      <div className="bg-white border-t border-warm-200 p-4">
+        <p className="text-center text-txt-muted text-sm">请先选择一个 Agent 开始对话</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white border-t border-gray-200 shrink-0 relative">
-      {/* 操作工具栏 - 放在输入框上方 */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          {/* 导入按钮 */}
+    <div className="bg-white border-t border-warm-200 shrink-0 relative">
+      {/* 操作工具栏 */}
+      <div className="flex items-center justify-between px-3 py-1.5 border-b border-warm-100">
+        <div className="flex items-center gap-1">
           <ImportChat 
             sessionId={chatMode === 'single' ? currentSingleSessionId || undefined : undefined}
             groupId={chatMode === 'group' ? currentGroupId || undefined : undefined}
           />
-          {/* 导出、清空按钮 */}
           <ChatActions 
             sessionId={chatMode === 'single' ? currentSingleSessionId || undefined : undefined} 
             groupId={chatMode === 'group' ? currentGroupId || undefined : undefined} 
           />
         </div>
-        <span className="text-xs text-gray-400">
-          {isLoading ? '处理中...' : '输入 @ 召唤群成员'}
+        <span className="text-xs text-txt-muted">
+          {isLoading ? '处理中...' : '@召唤群成员'}
         </span>
       </div>
       
       {/* @ 群成员列表 */}
       {showMentionList && filteredGroupAgents.length > 0 && (
-        <div className="absolute bottom-full left-3 right-3 mb-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto z-50">
+        <div className="absolute bottom-full left-3 right-3 mb-1 bg-white border border-warm-200 rounded-xl shadow-card max-h-48 overflow-y-auto z-50">
           {filteredGroupAgents.map(agent => (
             <button
               key={agent.id}
               onClick={() => handleSelectMention(agent.name)}
-              className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center gap-2 border-b border-gray-100 last:border-b-0"
+              className="w-full px-3 py-2 text-left hover:bg-warm-50 flex items-center gap-2 border-b border-warm-100 last:border-b-0"
             >
-              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xs font-semibold">
                 {agent.name[0]}
               </div>
-              <span className="text-sm text-gray-700">{agent.name}</span>
+              <span className="text-sm text-txt-primary">{agent.name}</span>
             </button>
           ))}
         </div>
@@ -176,14 +174,14 @@ export const MessageInput: React.FC = () => {
             onKeyPress={handleKeyPress}
             placeholder={isLoading ? 'AI 正在思考...' : '输入消息... (@召唤群成员)'}
             disabled={isLoading}
-            className="input-feishu resize-none min-h-[44px] max-h-[120px] disabled:bg-gray-50"
+            className="input-warm resize-none min-h-[44px] max-h-[120px] disabled:bg-warm-50"
             rows={1}
           />
         </div>
         <button
           onClick={handleSend}
           disabled={!inputValue.trim() || isLoading}
-          className="w-11 h-11 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed btn-feishu shrink-0"
+          className="w-11 h-11 rounded-xl bg-accent-orange text-white flex items-center justify-center hover:bg-orange-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed btn-warm shrink-0 shadow-sm"
         >
           {isLoading ? (
             <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">

@@ -205,10 +205,10 @@ export const ImportChat: React.FC<ImportChatProps> = ({ sessionId, groupId }) =>
       <button
         id="import-btn"
         onClick={() => setShowImport(true)}
-        className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        className="p-2 rounded-lg hover:bg-warm-100 transition-colors"
         title="导入聊天记录"
       >
-        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 text-txt-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
         </svg>
       </button>
@@ -220,7 +220,7 @@ export const ImportChat: React.FC<ImportChatProps> = ({ sessionId, groupId }) =>
               <h3 className="font-semibold">导入聊天记录</h3>
               <button
                 onClick={() => setShowImport(false)}
-                className="p-1 hover:bg-gray-100 rounded-lg"
+                className="p-1 hover:bg-warm-100 rounded-lg"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -237,7 +237,7 @@ export const ImportChat: React.FC<ImportChatProps> = ({ sessionId, groupId }) =>
                     name="importMode"
                     checked={importMode === 'merge'}
                     onChange={() => setImportMode('merge')}
-                    className="text-primary"
+                    className="text-accent-orange"
                   />
                   <span className="text-sm">追加到现有消息</span>
                 </label>
@@ -247,7 +247,7 @@ export const ImportChat: React.FC<ImportChatProps> = ({ sessionId, groupId }) =>
                     name="importMode"
                     checked={importMode === 'replace'}
                     onChange={() => setImportMode('replace')}
-                    className="text-primary"
+                    className="text-accent-orange"
                   />
                   <span className="text-sm">替换现有消息</span>
                 </label>
@@ -263,12 +263,12 @@ export const ImportChat: React.FC<ImportChatProps> = ({ sessionId, groupId }) =>
                   type="file"
                   accept=".md,.txt,.markdown"
                   onChange={handleFileSelect}
-                  className="block w-full text-sm text-gray-500
+                  className="block w-full text-sm text-txt-muted
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-lg file:border-0
                     file:text-sm file:font-medium
-                    file:bg-primary file:text-white
-                    hover:file:bg-primary-dark
+                    file:bg-accent-orange file:text-white
+                    hover:file:bg-accent-orange-dark
                     cursor-pointer"
                 />
               </div>
@@ -279,13 +279,13 @@ export const ImportChat: React.FC<ImportChatProps> = ({ sessionId, groupId }) =>
                   <div className="w-full border-t border-gray-200" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">或</span>
+                  <span className="px-2 bg-white text-txt-muted">或</span>
                 </div>
               </div>
 
               <button
                 onClick={handlePaste}
-                className="w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-2"
+                className="w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-warm-50 flex items-center justify-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -299,7 +299,7 @@ export const ImportChat: React.FC<ImportChatProps> = ({ sessionId, groupId }) =>
               )}
 
               {/* 格式说明 */}
-              <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+              <div className="text-xs text-txt-muted bg-warm-50 p-3 rounded-lg">
                 <p className="font-medium mb-1">支持的格式：</p>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Markdown 格式（导出格式）</li>

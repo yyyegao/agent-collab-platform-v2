@@ -137,7 +137,7 @@ export const GroupChatPage: React.FC<GroupChatPageProps> = ({ group }) => {
                 {groupAgents.slice(0, 3).map((agent, idx) => (
                   <div
                     key={agent.id}
-                    className="absolute w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold"
+                    className="absolute w-6 h-6 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xs font-bold"
                     style={{
                       left: idx * 3,
                       zIndex: 3 - idx,
@@ -166,7 +166,7 @@ export const GroupChatPage: React.FC<GroupChatPageProps> = ({ group }) => {
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white shadow-card flex items-center justify-center">
-                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 text-accent-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
@@ -186,7 +186,7 @@ export const GroupChatPage: React.FC<GroupChatPageProps> = ({ group }) => {
                   <div className={`max-w-[75%] ${isUser ? 'items-end' : 'items-start'} flex flex-col`}>
                     {!isUser && agent && (
                       <div className="flex items-center gap-2 mb-1">
-                        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold">
+                        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xs font-bold">
                           {agent.name[0]}
                         </div>
                         <span className="text-sm font-medium text-gray-700">{agent.name}</span>
@@ -230,14 +230,14 @@ export const GroupChatPage: React.FC<GroupChatPageProps> = ({ group }) => {
               onChange={e => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={`发送消息给 ${group.name}... (用 @名称 @特定Agent, @所有人 通知全部)`}
-              className="input-feishu resize-none min-h-[44px] max-h-[120px]"
+              className="input-warm resize-none min-h-[44px] max-h-[120px]"
               rows={1}
             />
           </div>
           <button
             onClick={handleSend}
             disabled={!inputValue.trim()}
-            className="w-11 h-11 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed btn-feishu shrink-0"
+            className="w-11 h-11 rounded-xl bg-accent-orange text-white flex items-center justify-center hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed btn-warm shrink-0"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

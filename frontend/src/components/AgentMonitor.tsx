@@ -20,7 +20,7 @@ const AgentTaskCard: React.FC<{ task: AgentTask }> = ({ task }) => {
       {/* Agent 名称和状态 */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-sm font-bold">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-sm font-bold">
             {task.agentName[0]}
           </div>
           <span className="font-medium text-gray-900">{task.agentName}</span>
@@ -44,7 +44,7 @@ const AgentTaskCard: React.FC<{ task: AgentTask }> = ({ task }) => {
           </div>
           <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-primary rounded-full transition-all duration-300"
+              className="h-full bg-accent-orange rounded-full transition-all duration-300"
               style={{ width: `${task.progress}%` }}
             />
           </div>
@@ -89,7 +89,7 @@ const AgentTaskCard: React.FC<{ task: AgentTask }> = ({ task }) => {
       <div className="flex items-center justify-between text-xs text-gray-400">
         <span>已运行 {elapsedMin > 0 ? `${elapsedMin}分` : ''}{elapsedSec}秒</span>
         {task.status === 'completed' && task.result && (
-          <span className="text-primary">✓ 已完成</span>
+          <span className="text-accent-orange">✓ 已完成</span>
         )}
       </div>
 
@@ -122,7 +122,7 @@ export const AgentMonitor: React.FC = () => {
 
       {/* 当前聊天上下文 */}
       {(chatMode === 'group' && currentGroup) || (chatMode === 'single' && currentSingleSessionId) ? (
-        <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border border-primary/20 p-4">
+        <div className="bg-gradient-to-r from-accent-orange/5 to-accent-violet/5 rounded-xl border border-accent-orange/20 p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">💬</span>
             <span className="font-medium text-gray-900">
@@ -152,7 +152,7 @@ export const AgentMonitor: React.FC = () => {
               
               return (
                 <div key={agent.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-sm font-bold">
                     {agent.name[0]}
                   </div>
                   <div className="flex-1">
@@ -199,7 +199,7 @@ export const AgentMonitor: React.FC = () => {
           <div className={`bg-white rounded-xl border p-4 ${statusInfo.border}`}>
             <h2 className="font-semibold text-gray-900 mb-3">当前对话 Agent 状态</h2>
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white font-bold">
                 {agent.name[0]}
               </div>
               <div className="flex-1">
@@ -266,7 +266,7 @@ export const AgentMonitor: React.FC = () => {
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold ${
-                    agent.status === 'online' ? 'bg-gradient-to-br from-primary to-secondary' :
+                    agent.status === 'online' ? 'bg-gradient-to-br from-accent-orange to-orange-600' :
                     agent.status === 'busy' ? 'bg-gradient-to-br from-blue-400 to-blue-500' :
                     'bg-gradient-to-br from-gray-400 to-gray-500'
                   }`}>
@@ -282,7 +282,7 @@ export const AgentMonitor: React.FC = () => {
                     <p className="text-sm text-gray-500 line-clamp-1">{agentTask.task}</p>
                     <div className="mt-1 h-1 bg-gray-100 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-primary rounded-full"
+                        className="h-full bg-accent-orange rounded-full"
                         style={{ width: `${agentTask.progress}%` }}
                       />
                     </div>
