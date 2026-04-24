@@ -100,194 +100,186 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
           </button>
         </div>
 
-        {/* Form + Footer layout: content area is the scroll container */}
-        <div className="flex-1 min-h-0 relative">
-          {/* Form scrolls inside, buttons fixed at bottom */}
-          <div
-            className="absolute inset-0 overflow-y-auto px-6 py-4"
-            style={{ paddingBottom: '80px' }}
-          >
-            <div className="space-y-4">
-
-              {/* Avatar */}
-              <div>
-                <label className="label-warm">头像</label>
-                <div className="flex items-center gap-3 mb-2">
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden"
-                    style={{ backgroundColor: avatarColor }}
-                  >
-                    <AvatarSVG size={56} />
-                  </div>
-                  <div className="flex gap-1.5 p-1.5 rounded-xl bg-warm-100 overflow-x-auto">
-                    {AVATAR_COLORS.map(color => (
-                      <button
-                        key={color}
-                        type="button"
-                        onClick={() => setFormData(prev => ({ ...prev, avatar: color }))}
-                        className="w-10 h-10 rounded-lg shrink-0 overflow-hidden transition-all"
-                        style={{ backgroundColor: color, outline: formData.avatar === color ? '2px solid #e85d04' : 'none', outlineOffset: '1px' }}
-                      >
-                        <AvatarSVG size={40} />
-                      </button>
-                    ))}
-                  </div>
+        {/* Scrollable form area + fixed footer buttons */}
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          <form id="agent-form" className="flex-1 overflow-y-auto px-6 py-4 space-y-4" onSubmit={e => { e.preventDefault(); handleSave(); }}>
+            {/* Avatar */}
+            <div>
+              <label className="label-warm">头像</label>
+              <div className="flex items-center gap-3 mb-2">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden"
+                  style={{ backgroundColor: avatarColor }}
+                >
+                  <AvatarSVG size={56} />
                 </div>
-              </div>
-
-              {/* Name */}
-              <div>
-                <label className="label-warm">名称 <span className="text-red-400">*</span></label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="Agent 名称"
-                  className="input-warm"
-                  required
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="label-warm">描述</label>
-                <textarea
-                  value={formData.description}
-                  onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="描述这个 Agent 的职责和能力..."
-                  className="input-warm h-[80px] overflow-hidden resize-none"
-                />
-              </div>
-
-              {/* Capabilities */}
-              <div>
-                <label className="label-warm">能力</label>
-                <div className="flex flex-wrap gap-2 max-h-[100px] overflow-y-auto">
-                  {CAPABILITY_OPTIONS.map(opt => (
+                <div className="flex gap-1.5 p-1.5 rounded-xl bg-warm-100 overflow-x-auto">
+                  {AVATAR_COLORS.map(color => (
                     <button
-                      key={opt.key}
+                      key={color}
                       type="button"
-                      onClick={() => {
-                        const caps = formData.capabilities.includes(opt.key)
-                          ? formData.capabilities.filter(c => c !== opt.key)
-                          : [...formData.capabilities, opt.key];
-                        setFormData(prev => ({ ...prev, capabilities: caps }));
-                      }}
-                      className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
-                        formData.capabilities.includes(opt.key)
-                          ? 'bg-accent-orange text-white'
-                          : 'bg-warm-100 text-txt-secondary hover:bg-warm-200'
-                      }`}
+                      onClick={() => setFormData(prev => ({ ...prev, avatar: color }))}
+                      className="w-10 h-10 rounded-lg shrink-0 overflow-hidden transition-all"
+                      style={{ backgroundColor: color, outline: formData.avatar === color ? '2px solid #e85d04' : 'none', outlineOffset: '1px' }}
                     >
-                      {opt.icon} {opt.key}
+                      <AvatarSVG size={40} />
                     </button>
                   ))}
                 </div>
               </div>
+            </div>
 
-              <div className="divider-warm" />
+            {/* Name */}
+            <div>
+              <label className="label-warm">名称 <span className="text-red-400">*</span></label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Agent 名称"
+                className="input-warm"
+                required
+              />
+            </div>
 
-              {/* Provider & Model */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="label-warm">Provider</label>
-                  <select
-                    value={formData.provider}
-                    onChange={e => setFormData(prev => ({ ...prev, provider: e.target.value }))}
-                    className="input-warm"
+            {/* Description */}
+            <div>
+              <label className="label-warm">描述</label>
+              <textarea
+                value={formData.description}
+                onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="描述这个 Agent 的职责和能力..."
+                className="input-warm h-[80px] overflow-hidden resize-none"
+              />
+            </div>
+
+            {/* Capabilities */}
+            <div>
+              <label className="label-warm">能力</label>
+              <div className="flex flex-wrap gap-2 max-h-[100px] overflow-y-auto">
+                {CAPABILITY_OPTIONS.map(opt => (
+                  <button
+                    key={opt.key}
+                    type="button"
+                    onClick={() => {
+                      const caps = formData.capabilities.includes(opt.key)
+                        ? formData.capabilities.filter(c => c !== opt.key)
+                        : [...formData.capabilities, opt.key];
+                      setFormData(prev => ({ ...prev, capabilities: caps }));
+                    }}
+                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
+                      formData.capabilities.includes(opt.key)
+                        ? 'bg-accent-orange text-white'
+                        : 'bg-warm-100 text-txt-secondary hover:bg-warm-200'
+                    }`}
                   >
-                    <option value="openai">OpenAI</option>
-                    <option value="anthropic">Anthropic</option>
-                    <option value="azure">Azure OpenAI</option>
-                    <option value="ollama">Ollama</option>
-                    <option value="gemini">Gemini</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="label-warm">Model</label>
-                  <input
-                    type="text"
-                    value={formData.model}
-                    onChange={e => setFormData(prev => ({ ...prev, model: e.target.value }))}
-                    placeholder="gpt-4o"
-                    className="input-warm"
-                  />
-                </div>
+                    {opt.icon} {opt.key}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              {/* Temperature & MaxTokens */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="label-warm">Temperature: {formData.temperature}</label>
-                  <input
-                    type="range"
-                    min={0}
-                    max={2}
-                    step={0.1}
-                    value={formData.temperature}
-                    onChange={e => setFormData(prev => ({ ...prev, temperature: parseFloat(e.target.value) }))}
-                    className="w-full accent-accent-orange"
-                  />
-                  <div className="flex justify-between text-xs text-txt-muted mt-1">
-                    <span>精准</span>
-                    <span>创意</span>
-                  </div>
-                </div>
-                <div>
-                  <label className="label-warm">Max Tokens</label>
-                  <input
-                    type="number"
-                    value={formData.maxTokens}
-                    onChange={e => setFormData(prev => ({ ...prev, maxTokens: parseInt(e.target.value) || 4096 }))}
-                    className="input-warm"
-                    min={1}
-                    max={128000}
-                  />
-                </div>
-              </div>
+            <div className="divider-warm" />
 
-              <div className="divider-warm" />
-
-              {/* API Key */}
+            {/* Provider & Model */}
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="label-warm">API Key</label>
-                <input
-                  type="password"
-                  value={formData.apiKey}
-                  onChange={e => setFormData(prev => ({ ...prev, apiKey: e.target.value }))}
-                  placeholder="sk-..."
+                <label className="label-warm">Provider</label>
+                <select
+                  value={formData.provider}
+                  onChange={e => setFormData(prev => ({ ...prev, provider: e.target.value }))}
                   className="input-warm"
-                />
+                >
+                  <option value="openai">OpenAI</option>
+                  <option value="anthropic">Anthropic</option>
+                  <option value="azure">Azure OpenAI</option>
+                  <option value="ollama">Ollama</option>
+                  <option value="gemini">Gemini</option>
+                </select>
               </div>
-
-              {/* Base URL */}
               <div>
-                <label className="label-warm">Base URL</label>
+                <label className="label-warm">Model</label>
                 <input
                   type="text"
-                  value={formData.baseUrl}
-                  onChange={e => setFormData(prev => ({ ...prev, baseUrl: e.target.value }))}
-                  placeholder="https://api.openai.com/v1"
+                  value={formData.model}
+                  onChange={e => setFormData(prev => ({ ...prev, model: e.target.value }))}
+                  placeholder="gpt-4o"
                   className="input-warm"
                 />
               </div>
+            </div>
 
-              {/* System Prompt */}
+            {/* Temperature & MaxTokens */}
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="label-warm">System Prompt</label>
-                <textarea
-                  value={formData.systemPrompt}
-                  onChange={e => setFormData(prev => ({ ...prev, systemPrompt: e.target.value }))}
-                  placeholder="设定 Agent 的角色和行为..."
-                  className="input-warm h-[100px] overflow-hidden resize-none"
+                <label className="label-warm">Temperature: {formData.temperature}</label>
+                <input
+                  type="range"
+                  min={0}
+                  max={2}
+                  step={0.1}
+                  value={formData.temperature}
+                  onChange={e => setFormData(prev => ({ ...prev, temperature: parseFloat(e.target.value) }))}
+                  className="w-full accent-accent-orange"
+                />
+                <div className="flex justify-between text-xs text-txt-muted mt-1">
+                  <span>精准</span>
+                  <span>创意</span>
+                </div>
+              </div>
+              <div>
+                <label className="label-warm">Max Tokens</label>
+                <input
+                  type="number"
+                  value={formData.maxTokens}
+                  onChange={e => setFormData(prev => ({ ...prev, maxTokens: parseInt(e.target.value) || 4096 }))}
+                  className="input-warm"
+                  min={1}
+                  max={128000}
                 />
               </div>
-
             </div>
-          </div>
 
-          {/* Footer buttons - absolute fixed at bottom of modal */}
-          <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 px-6 py-4 border-t border-warm-200 bg-white">
+            <div className="divider-warm" />
+
+            {/* API Key */}
+            <div>
+              <label className="label-warm">API Key</label>
+              <input
+                type="password"
+                value={formData.apiKey}
+                onChange={e => setFormData(prev => ({ ...prev, apiKey: e.target.value }))}
+                placeholder="sk-..."
+                className="input-warm"
+              />
+            </div>
+
+            {/* Base URL */}
+            <div>
+              <label className="label-warm">Base URL</label>
+              <input
+                type="text"
+                value={formData.baseUrl}
+                onChange={e => setFormData(prev => ({ ...prev, baseUrl: e.target.value }))}
+                placeholder="https://api.openai.com/v1"
+                className="input-warm"
+              />
+            </div>
+
+            {/* System Prompt */}
+            <div>
+              <label className="label-warm">System Prompt</label>
+              <textarea
+                value={formData.systemPrompt}
+                onChange={e => setFormData(prev => ({ ...prev, systemPrompt: e.target.value }))}
+                placeholder="设定 Agent 的角色和行为..."
+                className="input-warm h-[100px] overflow-hidden resize-none"
+              />
+            </div>
+          </form>
+
+          {/* Footer buttons */}
+          <div className="shrink-0 flex items-center gap-3 px-6 py-4 border-t border-warm-200 bg-white">
             {agent && onDelete && (
               <button
                 type="button"
@@ -306,8 +298,8 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
               取消
             </button>
             <button
-              type="button"
-              onClick={handleSave}
+              type="submit"
+              form="agent-form"
               className="px-6 py-2 rounded-xl bg-accent-orange text-white font-medium hover:bg-orange-600 transition-colors"
             >
               保存
