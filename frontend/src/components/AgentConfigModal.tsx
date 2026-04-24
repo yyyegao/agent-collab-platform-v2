@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { AgentConfig } from '../store';
 
-const AVATAR_COLORS = [
-  '#e85d04', '#0077b6', '#00b4d8', '#2dc653', '#7b2cbf',
-  '#e63946', '#457b9d', '#f4a261', '#264653', '#b5179e',
-];
-
-const AvatarSVG = ({ size = 48 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#e85d04"/>
-    <circle cx="24" cy="20" r="8" fill="white" fillOpacity="0.9"/>
-    <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="white" strokeWidth="2.5" strokeLinecap="round" fillOpacity="0.9"/>
-  </svg>
-);
-
 interface Props {
   agent?: AgentConfig;
   isOpen: boolean;
@@ -38,7 +25,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
     agent || {
       id: '',
       name: '',
-      avatar: AVATAR_COLORS[0],
+      avatar: '',
       description: '',
       capabilities: [],
       provider: 'openai',
@@ -55,7 +42,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
     setFormData(agent || {
       id: '',
       name: '',
-      avatar: AVATAR_COLORS[0],
+      avatar: '',
       description: '',
       capabilities: [],
       provider: 'openai',
@@ -77,8 +64,6 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
   if (!isOpen) return null;
 
 
-
-  const avatarColor = AVATAR_COLORS.includes(formData.avatar) ? formData.avatar : AVATAR_COLORS[0];
 
   return (
     <div
@@ -108,28 +93,23 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
           <form id="agent-form" className="flex-1 overflow-y-auto px-6 py-4 space-y-4" onSubmit={e => { e.preventDefault(); handleSave(); }}>
             {/* Avatar */}
-            <div>
-              <label className="label-warm">选择头像</label>
-              <div className="flex items-center gap-3 mb-2">
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden"
-                  style={{ backgroundColor: avatarColor }}
-                >
-                  <AvatarSVG size={56} />
-                </div>
-                <div className="flex gap-1.5 p-1.5 rounded-xl bg-warm-100 overflow-x-auto">
-                  {AVATAR_COLORS.map(color => (
-                    <button
-                      key={color}
-                      type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, avatar: color }))}
-                      className="w-10 h-10 rounded-lg shrink-0 overflow-hidden transition-all"
-                      style={{ backgroundColor: color, outline: formData.avatar === color ? '2px solid #e85d04' : 'none', outlineOffset: '1px' }}
-                    >
-                      <AvatarSVG size={40} />
-                    </button>
-                  ))}
-                </div>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-2xl font-bold">
+                {formData.avatar ? (
+                  <img src={formData.avatar} alt={formData.name} className="w-full h-full object-cover rounded-2xl" />
+                ) : (
+                  formData.name[0]?.toUpperCase() || 'A'
+                )}
+              </div>
+              <div className="flex-1">
+                <label className="label-warm">头像 URL</label>
+                <input
+                  type="text"
+                  value={formData.avatar || ''}
+                  onChange={e => setFormData(prev => ({ ...prev, avatar: e.target.value }))}
+                  placeholder="https://..."
+                  className="input-warm"
+                />
               </div>
             </div>
 
