@@ -21,7 +21,11 @@ export const AgentChatList: React.FC<AgentChatListProps> = ({
   // 筛选单聊会话，并按最近消息时间倒序
   const singleSessions = sessions
     .filter(s => s.type === 'single')
-    .sort((a, b) => b.updatedAt - a.updatedAt);
+    .sort((a, b) => {
+      const ta = typeof a.updatedAt === 'string' ? new Date(a.updatedAt).getTime() : (a.updatedAt || 0);
+      const tb = typeof b.updatedAt === 'string' ? new Date(b.updatedAt).getTime() : (b.updatedAt || 0);
+      return tb - ta;
+    });
 
   return (
     <div className="p-4">

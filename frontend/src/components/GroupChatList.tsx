@@ -26,8 +26,9 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
   const sortedGroupChats = [...groupChats].sort((a, b) => {
     const sessionA = sessions.find(s => s.id === a.id);
     const sessionB = sessions.find(s => s.id === b.id);
-    const timeA = sessionA?.updatedAt || a.createdAt;
-    const timeB = sessionB?.updatedAt || b.createdAt;
+    const parseTime = (t) => typeof t === 'string' ? new Date(t).getTime() : (t || 0);
+    const timeA = parseTime(sessionA?.updatedAt) || a.createdAt;
+    const timeB = parseTime(sessionB?.updatedAt) || b.createdAt;
     return timeB - timeA;
   });
 
