@@ -6,8 +6,6 @@ const AVATAR_COLORS = [
   '#e63946', '#457b9d', '#f4a261', '#264653', '#b5179e',
 ];
 
-const AvatarSVG = ({ size = 48 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="48" height="48" rx="12" fill="#e85d04"/>
     <circle cx="24" cy="20" r="8" fill="white" fillOpacity="0.9"/>
     <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="white" strokeWidth="2.5" strokeLinecap="round" fillOpacity="0.9"/>
