@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f7f9fc;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 飞书风格滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 飞书风格按钮动画 */
+.btn-feishu {
+  @apply transition-all duration-200 ease-out;
+}
+
+.btn-feishu:hover {
+  @apply transform -translate-y-0.5;
+  box-shadow: 0 4px 12px rgba(0, 166, 212, 0.25);
+}
+
+.btn-feishu:active {
+  @apply transform translate-y-0;
+}
+
+/* 飞书风格卡片 */
+.card-feishu {
+  @apply bg-white rounded-xl border border-gray-100 shadow-lg transition-all duration-200;
+}
+
+.card-feishu:hover {
+  @apply shadow-xl border-gray-200;
+}
+
+/* 飞书风格输入框 */
+.input-feishu {
+  @apply w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900;
+  @apply focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20;
+  @apply transition-all duration-200;
+}
+
+.input-feishu::placeholder {
+  @apply text-gray-400;
+}
+
+/* 消息气泡样式 - 飞书风格 */
+.message-bubble-user {
+  @apply bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl rounded-br-md;
+  box-shadow: 0 2px 8px rgba(0, 166, 212, 0.25);
+}
+
+.message-bubble-agent {
+  @apply bg-white border border-gray-200 text-gray-900 rounded-2xl rounded-bl-md;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* 标签样式 */
+.tag-feishu {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  @apply bg-primary-light text-primary;
+}
+
+/* 弹窗遮罩 */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  @apply bg-white rounded-2xl shadow-modal max-w-lg w-full mx-4 max-h-[90vh] overflow-auto;
+  animation: modalSlideIn 0.25s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 头像样式 */
+.avatar-feishu {
+  @apply rounded-full flex items-center justify-center font-semibold text-white;
+  @apply ring-2 ring-white ring-offset-2;
+}
+
+/* 群聊头像堆叠 */
+.avatar-stack {
+  @apply relative inline-flex;
+}
+
+.avatar-stack .avatar {
+  @apply absolute border-2 border-white;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  @apply w-3 h-3 rounded-full border-2 border-white;
+}
+
+.status-online {
+  @apply bg-success;
+}
+
+.status-offline {
+  @apply bg-gray-400;
+}
+
+.status-busy {
+  @apply bg-warning;
+}
+
+/* 列表项悬浮效果 */
+.list-item-feishu {
+  @apply transition-all duration-150;
+}
+
+.list-item-feishu:hover {
+  @apply bg-gray-50;
+}
+
+/* 飞书风格导航项 */
+.nav-item-feishu {
+  @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-600;
+  @apply transition-all duration-200;
+}
+
+.nav-item-feishu:hover {
+  @apply bg-gray-100 text-gray-900;
+}
+
+.nav-item-feishu.active {
+  @apply bg-primary-light text-primary font-medium;
+}
+
+/* 分隔线 */
+.divider-feishu {
+  @apply h-px bg-gray-100 my-4;
+}
+
+/* 表单标签 */
+.label-feishu {
+  @apply block text-sm font-medium text-gray-700 mb-1.5;
+}
+
+/* 开关样式 */
+.toggle-feishu {
+  @apply relative inline-flex h-6 w-11 items-center rounded-full;
+  @apply transition-colors duration-200 ease-in-out;
+}
+
+.toggle-feishu-checked {
+  @apply bg-primary;
+}
+
+.toggle-feishu-unchecked {
+  @apply bg-gray-200;
+}
+
+.toggle-feishu::after {
+  @apply inline-block h-4 w-4 rounded-full bg-white shadow;
+  @apply transition-transform duration-200 ease-in-out;
+  content: '';
+}
+
+.toggle-feishu-checked::after {
+  @apply translate-x-6;
+}
+
+.toggle-feishu-unchecked::after {
+  @apply translate-x-1;
+}
