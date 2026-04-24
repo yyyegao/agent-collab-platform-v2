@@ -96,6 +96,26 @@ const App: React.FC = () => {
               <p className="text-xs text-txt-muted">多 Agent 协作对话</p>
             </div>
           )}
+          
+          {/* 切换单聊/群聊 */}
+          <div className="flex items-center gap-1 bg-warm-100 rounded-xl p-1">
+            <button
+              onClick={() => setChatMode('single')}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                chatMode === 'single' ? 'bg-white text-accent-orange shadow-sm' : 'text-txt-secondary hover:text-txt-primary'
+              }`}
+            >
+              💬 单聊
+            </button>
+            <button
+              onClick={() => setChatMode('group')}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                chatMode === 'group' ? 'bg-white text-accent-orange shadow-sm' : 'text-txt-secondary hover:text-txt-primary'
+              }`}
+            >
+              👥 群聊
+            </button>
+          </div>
         </header>
         
         <div className="flex-1 flex overflow-hidden min-h-0">
@@ -143,7 +163,7 @@ const App: React.FC = () => {
       <div className="hidden md:flex md:fixed md:left-0 md:top-0 md:bottom-0 md:w-64 sidebar-warm flex-col z-10">
         <div className="p-5 border-b border-warm-200">
           <h1 className="text-lg font-bold text-txt-primary flex items-center gap-2">
-            <img src="https://web-api.textin.com/ocr_image/external/c4c76097d1ef10ab.jpg" alt="logo" className="h-8 w-auto object-contain" />
+            <span className="text-accent-orange text-xl">⬡</span>
             Agent Collab
           </h1>
           <p className="text-xs text-txt-muted mt-0.5">多 Agent 协作平台</p>
