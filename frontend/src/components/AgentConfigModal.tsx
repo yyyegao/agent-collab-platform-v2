@@ -12,6 +12,17 @@ interface Props {
 
 
 const CAPABILITY_OPTIONS = [
+  { key: '代码编写', icon: '💻' },
+  { key: '代码调试', icon: '🐛' },
+  { key: '代码优化', icon: '⚡' },
+  { key: '单元测试', icon: '🧪' },
+  { key: '文档撰写', icon: '📄' },
+  { key: '文档整理', icon: '📁' },
+  { key: '文案撰写', icon: '✍️' },
+  { key: 'UI 设计', icon: '🎨' },
+  { key: 'UX 设计', icon: '🖼️' },
+  { key: '产品设计', icon: '📐' },
+  { key: '数据处理', icon: '🔢' },
   { key: '数据分析', icon: '📊' },
   { key: '可视化', icon: '📈' },
   { key: '翻译', icon: '🌐' },
