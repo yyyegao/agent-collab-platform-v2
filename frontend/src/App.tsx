@@ -124,6 +124,7 @@ const App: React.FC = () => {
               <div className="w-72 border-r border-warm-200 bg-white shrink-0 hidden md:block overflow-y-auto">
                 <GroupChatList
                   groupChats={groupChats}
+                  sessions={sessions}
                   agents={agents}
                   currentGroupId={currentGroupId}
                   onSelectGroup={setCurrentGroupId}

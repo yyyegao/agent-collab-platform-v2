@@ -1,8 +1,9 @@
 import React from 'react';
-import { GroupChat, AgentConfig } from '../types';
+import { GroupChat, AgentConfig, ChatSession } from '../types';
 
 interface GroupChatListProps {
   groupChats: GroupChat[];
+  sessions: ChatSession[];
   agents: AgentConfig[];
   currentGroupId: string | null;
   onSelectGroup: (groupId: string) => void;
@@ -11,6 +12,7 @@ interface GroupChatListProps {
 
 export const GroupChatList: React.FC<GroupChatListProps> = ({
   groupChats,
+  sessions,
   agents,
   currentGroupId,
   onSelectGroup,
@@ -19,6 +21,15 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
   const getGroupAgents = (agentIds: string[]) => {
     return agents.filter(a => agentIds.includes(a.id));
   };
+
+  // 按最近消息时间倒序排列群聊
+  const sortedGroupChats = [...groupChats].sort((a, b) => {
+    const sessionA = sessions.find(s => s.id === a.id);
+    const sessionB = sessions.find(s => s.id === b.id);
+    const timeA = sessionA?.updatedAt || a.createdAt;
+    const timeB = sessionB?.updatedAt || b.createdAt;
+    return timeB - timeA;
+  });
 
   return (
     <div className="p-4">
@@ -46,7 +57,7 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
             <p className="text-xs text-txt-muted">点击 + 创建群聊，邀请多个 Agent 协作</p>
           </div>
         ) : (
-          groupChats.map(group => {
+          sortedGroupChats.map(group => {
             const groupAgents = getGroupAgents(group.agents);
             const isSelected = currentGroupId === group.id;
             
