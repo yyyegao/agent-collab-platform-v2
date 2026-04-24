@@ -51,8 +51,12 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent, onDragStart, onEdit
       }`}
     >
       <div className="flex items-start gap-3">
-        <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden">
-          <AvatarSVG size={56} />
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden">
+          {agent.avatar ? (
+            <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover rounded-2xl" />
+          ) : (
+            <AvatarSVG size={56} />
+          )}
         </div>
         
         <div className="flex-1 min-w-0">
