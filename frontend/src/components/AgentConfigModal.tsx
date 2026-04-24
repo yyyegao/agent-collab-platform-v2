@@ -156,7 +156,7 @@ export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDel
             {/* Capabilities */}
             <div>
               <label className="label-warm">能力</label>
-              <div className="flex flex-wrap gap-2 max-h-[100px] overflow-y-auto">
+              <div className="flex flex-wrap gap-2 max-h-[100px] overflow-hidden">
                 {CAPABILITY_OPTIONS.map(opt => (
                   <button
                     key={opt.key}
