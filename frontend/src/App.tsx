@@ -121,7 +121,7 @@ const App: React.FC = () => {
         <div className="flex-1 flex overflow-hidden min-h-0">
           {chatMode === 'group' ? (
             <>
-              <div className="w-72 border-r border-warm-200 bg-white shrink-0 hidden md:block">
+              <div className="w-72 border-r border-warm-200 bg-white shrink-0 hidden md:block overflow-y-auto">
                 <GroupChatList
                   groupChats={groupChats}
                   agents={agents}
