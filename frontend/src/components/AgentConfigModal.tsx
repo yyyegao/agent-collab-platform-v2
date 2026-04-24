@@ -1,312 +1,345 @@
 import React, { useState, useEffect } from 'react';
-import type { AgentConfig } from '../store';
+import { AgentConfig } from '../types';
 
-interface Props {
-  agent?: AgentConfig;
+interface AgentConfigModalProps {
+  agent: AgentConfig | null;
   isOpen: boolean;
   onClose: () => void;
   onSave: (agent: AgentConfig) => void;
   onDelete?: (id: string) => void;
 }
 
-const AVATAR_COLORS = [
-  '#e85d04', '#0077b6', '#00b4d8', '#2dc653', '#7b2cbf',
-  '#e63946', '#457b9d', '#f4a261', '#264653', '#b5179e',
+const defaultProviders = [
+  { value: 'openai', label: 'OpenAI', defaultModel: 'gpt-4o' },
+  { value: 'anthropic', label: 'Anthropic', defaultModel: 'claude-sonnet-4-20250514' },
+  { value: 'ollama', label: 'Ollama', defaultModel: 'llama3' },
+  { value: 'custom', label: '自定义', defaultModel: '' },
+  { value: 'longcat', label: 'LongCat', defaultModel: 'qwen2.5-72b-instruct' },
+  { value: 'minimax', label: 'MiniMax', defaultModel: 'MiniMax-M2.7' },
 ];
 
-const AvatarSVG = ({ size = 48 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#e85d04"/>
-    <circle cx="24" cy="20" r="8" fill="white" fillOpacity="0.9"/>
-    <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="white" strokeWidth="2.5" strokeLinecap="round" fillOpacity="0.9"/>
-  </svg>
-);
-
-const CAPABILITY_OPTIONS = [
-  { key: '数据分析', icon: '📊' },
-  { key: '可视化', icon: '📈' },
-  { key: '翻译', icon: '🌐' },
-  { key: '润色', icon: '✨' },
-  { key: '总结', icon: '📝' },
-  { key: '问答', icon: '💡' },
+const defaultCapabilities = [
+  '代码编写', '代码调试', '代码优化', '单元测试',
+  '文档撰写', '文档整理', '文案撰写',
+  'UI 设计', 'UX 设计', '产品设计',
+  '数据处理', '数据分析', '可视化',
+  '翻译', '润色', '总结', '问答'
 ];
 
-export default function AgentConfigModal({ agent, isOpen, onClose, onSave, onDelete }: Props) {
-  const [formData, setFormData] = useState<AgentConfig>(
-    agent || {
-      id: '',
-      name: '',
-      avatar: '',
-      description: '',
-      capabilities: [],
-      provider: 'openai',
-      model: 'gpt-4o',
-      apiKey: '',
-      baseUrl: '',
-      systemPrompt: '',
-      temperature: 0.7,
-      maxTokens: 4096,
-    }
-  );
+export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
+  agent,
+  isOpen,
+  onClose,
+  onSave,
+  onDelete,
+}) => {
+  const [formData, setFormData] = useState<AgentConfig>({
+    id: '',
+    name: '',
+    description: '',
+    avatar: '',
+    status: 'online',
+    capabilities: [],
+    provider: 'openai',
+    model: 'gpt-4o',
+    apiKey: '',
+    baseUrl: '',
+    systemPrompt: '',
+    temperature: 0.7,
+    maxTokens: 4096,
+  });
+
+  const [showApiKey, setShowApiKey] = useState(false);
 
   useEffect(() => {
-    setFormData(agent || {
-      id: '',
-      name: '',
-      avatar: AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)],
-      description: '',
-      capabilities: [],
-      provider: 'openai',
-      model: 'gpt-4o',
-      apiKey: '',
-      baseUrl: '',
-      systemPrompt: '',
-      temperature: 0.7,
-      maxTokens: 4096,
-    });
-  }, [agent]);
+    if (agent) {
+      setFormData(agent);
+    } else {
+      setFormData({
+        id: `agent-${Date.now()}`,
+        name: '',
+        description: '',
+        avatar: '',
+        status: 'online',
+        capabilities: [],
+        provider: 'openai',
+        model: 'gpt-4o',
+        apiKey: '',
+        baseUrl: '',
+        systemPrompt: '',
+        temperature: 0.7,
+        maxTokens: 4096,
+      });
+    }
+  }, [agent, isOpen]);
 
-  const handleSave = () => {
-    if (!formData.name.trim()) { alert('请输入名称'); return; }
+  if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     onSave(formData);
     onClose();
   };
 
-  if (!isOpen) return null;
+  const toggleCapability = (cap: string) => {
+    setFormData(prev => ({
+      ...prev,
+      capabilities: prev.capabilities.includes(cap)
+        ? prev.capabilities.filter(c => c !== cap)
+        : [...prev.capabilities, cap]
+    }));
+  };
 
-  const avatarColor = AVATAR_COLORS.includes(formData.avatar) ? formData.avatar : AVATAR_COLORS[0];
+  const handleProviderChange = (provider: string) => {
+    const providerConfig = defaultProviders.find(p => p.value === provider);
+    setFormData(prev => ({
+      ...prev,
+      provider: provider as any,
+      model: providerConfig?.defaultModel || '',
+    }));
+  };
 
   return (
-    <div
-      className="modal-overlay-warm"
-      onClick={onClose}
-    >
-      <div
-        className="modal-content-warm max-w-lg w-full max-h-[90vh] flex flex-col"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="shrink-0 flex items-center justify-between px-6 py-4 border-b border-warm-200">
-          <h2 className="text-lg font-bold text-txt-primary">
-            {agent ? '编辑 Agent' : '添加 Agent'}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-lg hover:bg-warm-100 text-txt-muted transition-colors"
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-          </button>
-        </div>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <div className="p-6">
+          {/* 头部 */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900">
+              {agent ? '编辑 Agent' : '添加 Agent'}
+            </h2>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
-        {/* Scrollable form area + fixed footer buttons */}
-        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <form id="agent-form" className="flex-1 overflow-y-auto px-6 py-4 space-y-4" onSubmit={e => { e.preventDefault(); handleSave(); }}>
-            {/* Avatar */}
-            <div>
-              <label className="label-warm">头像</label>
-              <div className="flex items-center gap-3 mb-2">
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden"
-                  style={{ backgroundColor: avatarColor }}
-                >
-                  <AvatarSVG size={56} />
-                </div>
-                <div className="flex gap-1.5 p-1.5 rounded-xl bg-warm-100 overflow-x-auto">
-                  {AVATAR_COLORS.map(color => (
-                    <button
-                      key={color}
-                      type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, avatar: color }))}
-                      className="w-10 h-10 rounded-lg shrink-0 overflow-hidden transition-all"
-                      style={{ backgroundColor: color, outline: formData.avatar === color ? '2px solid #e85d04' : 'none', outlineOffset: '1px' }}
-                    >
-                      <AvatarSVG size={40} />
-                    </button>
-                  ))}
-                </div>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* 头像和名称 */}
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold">
+                {formData.avatar ? (
+                  <img src={formData.avatar} alt={formData.name} className="w-full h-full object-cover rounded-2xl" />
+                ) : (
+                  formData.name[0]?.toUpperCase() || 'A'
+                )}
+              </div>
+              <div className="flex-1">
+                <label className="label-feishu">头像 URL</label>
+                <input
+                  type="text"
+                  value={formData.avatar || ''}
+                  onChange={e => setFormData(prev => ({ ...prev, avatar: e.target.value }))}
+                  placeholder="https://..."
+                  className="input-feishu"
+                />
               </div>
             </div>
 
-            {/* Name */}
+            {/* 名称 */}
             <div>
-              <label className="label-warm">名称 <span className="text-red-400">*</span></label>
+              <label className="label-feishu">名称 *</label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Agent 名称"
-                className="input-warm"
+                placeholder="例如：代码助手"
+                className="input-feishu"
                 required
               />
             </div>
 
-            {/* Description */}
+            {/* 角色描述 */}
             <div>
-              <label className="label-warm">描述</label>
+              <label className="label-feishu">角色描述 *</label>
               <textarea
                 value={formData.description}
                 onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 placeholder="描述这个 Agent 的职责和能力..."
-                className="input-warm h-[80px] overflow-hidden resize-none"
+                className="input-feishu min-h-[80px] resize-none"
+                required
               />
             </div>
 
-            {/* Capabilities */}
+            {/* 能力标签 */}
             <div>
-              <label className="label-warm">能力</label>
-              <div className="flex flex-wrap gap-2 max-h-[100px] overflow-hidden">
-                {CAPABILITY_OPTIONS.map(opt => (
+              <label className="label-feishu">能力</label>
+              <div className="flex flex-wrap gap-2">
+                {defaultCapabilities.map(cap => (
                   <button
-                    key={opt.key}
+                    key={cap}
                     type="button"
-                    onClick={() => {
-                      const caps = formData.capabilities.includes(opt.key)
-                        ? formData.capabilities.filter(c => c !== opt.key)
-                        : [...formData.capabilities, opt.key];
-                      setFormData(prev => ({ ...prev, capabilities: caps }));
-                    }}
-                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
-                      formData.capabilities.includes(opt.key)
-                        ? 'bg-accent-orange text-white'
-                        : 'bg-warm-100 text-txt-secondary hover:bg-warm-200'
+                    onClick={() => toggleCapability(cap)}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                      formData.capabilities.includes(cap)
+                        ? 'bg-primary text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
-                    {opt.icon} {opt.key}
+                    {cap}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="divider-warm" />
+            {/* 模型配置 */}
+            <div className="divider-feishu my-4" />
+            <h3 className="font-semibold text-gray-900">模型配置</h3>
 
-            {/* Provider & Model */}
             <div className="grid grid-cols-2 gap-4">
+              {/* 提供商 */}
               <div>
-                <label className="label-warm">Provider</label>
+                <label className="label-feishu">提供商</label>
                 <select
                   value={formData.provider}
-                  onChange={e => setFormData(prev => ({ ...prev, provider: e.target.value }))}
-                  className="input-warm"
+                  onChange={e => handleProviderChange(e.target.value)}
+                  className="input-feishu"
                 >
-                  <option value="openai">OpenAI</option>
-                  <option value="anthropic">Anthropic</option>
-                  <option value="azure">Azure OpenAI</option>
-                  <option value="ollama">Ollama</option>
-                  <option value="gemini">Gemini</option>
+                  {defaultProviders.map(p => (
+                    <option key={p.value} value={p.value}>{p.label}</option>
+                  ))}
                 </select>
               </div>
+
+              {/* 模型 */}
               <div>
-                <label className="label-warm">Model</label>
+                <label className="label-feishu">模型</label>
                 <input
                   type="text"
                   value={formData.model}
                   onChange={e => setFormData(prev => ({ ...prev, model: e.target.value }))}
-                  placeholder="gpt-4o"
-                  className="input-warm"
+                  placeholder="模型名称"
+                  className="input-feishu"
                 />
               </div>
             </div>
 
-            {/* Temperature & MaxTokens */}
+            {/* API Key */}
+            <div>
+              <label className="label-feishu">API Key</label>
+              <div className="relative">
+                <input
+                  type={showApiKey ? 'text' : 'password'}
+                  value={formData.apiKey || ''}
+                  onChange={e => setFormData(prev => ({ ...prev, apiKey: e.target.value }))}
+                  placeholder="sk-..."
+                  className="input-feishu pr-12"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowApiKey(!showApiKey)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showApiKey ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Base URL */}
+            <div>
+              <label className="label-feishu">Base URL (可选)</label>
+              <input
+                type="text"
+                value={formData.baseUrl || ''}
+                onChange={e => setFormData(prev => ({ ...prev, baseUrl: e.target.value }))}
+                placeholder="https://api.openai.com/v1"
+                className="input-feishu"
+              />
+            </div>
+
+            {/* 生成参数 */}
+            <div className="divider-feishu my-4" />
+            <h3 className="font-semibold text-gray-900">生成参数</h3>
+
+            {/* System Prompt */}
+            <div>
+              <label className="label-feishu">System Prompt</label>
+              <textarea
+                value={formData.systemPrompt || ''}
+                onChange={e => setFormData(prev => ({ ...prev, systemPrompt: e.target.value }))}
+                placeholder="给 Agent 的系统提示词..."
+                className="input-feishu min-h-[100px] resize-none"
+              />
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
+              {/* Temperature */}
               <div>
-                <label className="label-warm">Temperature: {formData.temperature}</label>
+                <label className="label-feishu">Temperature: {formData.temperature}</label>
                 <input
                   type="range"
-                  min={0}
-                  max={2}
-                  step={0.1}
+                  min="0"
+                  max="2"
+                  step="0.1"
                   value={formData.temperature}
                   onChange={e => setFormData(prev => ({ ...prev, temperature: parseFloat(e.target.value) }))}
-                  className="w-full accent-accent-orange"
+                  className="w-full accent-primary"
                 />
-                <div className="flex justify-between text-xs text-txt-muted mt-1">
-                  <span>精准</span>
+                <div className="flex justify-between text-xs text-gray-400 mt-1">
+                  <span>精确</span>
                   <span>创意</span>
                 </div>
               </div>
+
+              {/* Max Tokens */}
               <div>
-                <label className="label-warm">Max Tokens</label>
+                <label className="label-feishu">Max Tokens</label>
                 <input
                   type="number"
                   value={formData.maxTokens}
-                  onChange={e => setFormData(prev => ({ ...prev, maxTokens: parseInt(e.target.value) || 4096 }))}
-                  className="input-warm"
+                  onChange={e => setFormData(prev => ({ ...prev, maxTokens: parseInt(e.target.value) }))}
+                  className="input-feishu"
                   min={1}
                   max={128000}
                 />
               </div>
             </div>
 
-            <div className="divider-warm" />
-
-            {/* API Key */}
-            <div>
-              <label className="label-warm">API Key</label>
-              <input
-                type="password"
-                value={formData.apiKey}
-                onChange={e => setFormData(prev => ({ ...prev, apiKey: e.target.value }))}
-                placeholder="sk-..."
-                className="input-warm"
-              />
-            </div>
-
-            {/* Base URL */}
-            <div>
-              <label className="label-warm">Base URL</label>
-              <input
-                type="text"
-                value={formData.baseUrl}
-                onChange={e => setFormData(prev => ({ ...prev, baseUrl: e.target.value }))}
-                placeholder="https://api.openai.com/v1"
-                className="input-warm"
-              />
-            </div>
-
-            {/* System Prompt */}
-            <div>
-              <label className="label-warm">System Prompt</label>
-              <textarea
-                value={formData.systemPrompt}
-                onChange={e => setFormData(prev => ({ ...prev, systemPrompt: e.target.value }))}
-                placeholder="设定 Agent 的角色和行为..."
-                className="input-warm h-[100px] overflow-hidden resize-none"
-              />
-            </div>
-          </form>
-
-          {/* Footer buttons */}
-          <div className="shrink-0 flex items-center gap-3 px-6 py-4 border-t border-warm-200 bg-white">
-            {agent && onDelete && (
+            {/* 按钮组 */}
+            <div className="flex gap-3 pt-4">
+              {agent && onDelete && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onDelete(agent.id);
+                    onClose();
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-red-500 hover:bg-red-50 font-medium transition-colors"
+                >
+                  删除
+                </button>
+              )}
+              <div className="flex-1" />
               <button
                 type="button"
-                onClick={() => { onDelete(agent.id); onClose(); }}
-                className="px-4 py-2 rounded-xl text-red-500 hover:bg-red-50 font-medium transition-colors"
+                onClick={onClose}
+                className="px-4 py-2.5 rounded-xl bg-gray-100 text-gray-600 font-medium hover:bg-gray-200 transition-colors"
               >
-                删除
+                取消
               </button>
-            )}
-            <div className="flex-1" />
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-warm-100 text-txt-secondary font-medium hover:bg-warm-200 transition-colors"
-            >
-              取消
-            </button>
-            <button
-              type="submit"
-              form="agent-form"
-              className="px-6 py-2 rounded-xl bg-accent-orange text-white font-medium hover:bg-orange-600 transition-colors"
-            >
-              保存
-            </button>
-          </div>
+              <button
+                type="submit"
+                className="px-6 py-2.5 rounded-xl bg-primary text-white font-medium hover:bg-primary-dark transition-colors btn-feishu"
+              >
+                保存
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   );
-}
+};
