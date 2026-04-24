@@ -163,7 +163,7 @@ const App: React.FC = () => {
       <div className="hidden md:flex md:fixed md:left-0 md:top-0 md:bottom-0 md:w-64 sidebar-warm flex-col z-10">
         <div className="p-5 border-b border-warm-200">
           <h1 className="text-lg font-bold text-txt-primary flex items-center gap-2">
-            <span className="text-accent-orange text-xl">⬡</span>
+            <img src="https://web-api.textin.com/ocr_image/external/c4c76097d1ef10ab.jpg" alt="logo" className="h-8 w-auto object-contain" />
             Agent Collab
           </h1>
           <p className="text-xs text-txt-muted mt-0.5">多 Agent 协作平台</p>
