@@ -215,7 +215,7 @@ export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
                 value={formData.description}
                 onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 placeholder="描述这个 Agent 的职责和能力..."
-                className="input-warm min-h-[80px] resize-none"
+                className="input-warm min-h-[80px] max-h-[120px] overflow-y-auto resize-none"
                 required
               />
             </div>
@@ -223,7 +223,7 @@ export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
             {/* 能力标签 */}
             <div>
               <label className="label-warm">能力</label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 max-h-[100px] overflow-y-auto">
                 {defaultCapabilities.map(cap => (
                   <button
                     key={cap}
@@ -362,35 +362,35 @@ export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
                 />
               </div>
             </div>
-
-            {/* 底部按钮 */}
-            <div className="flex items-center gap-3 pt-2">
-              {agent && onDelete && (
-                <button
-                  type="button"
-                  onClick={() => { onDelete(agent.id); onClose(); }}
-                  className="px-4 py-2 rounded-xl text-red-500 hover:bg-red-50 font-medium transition-colors"
-                >
-                  删除
-                </button>
-              )}
-              <div className="flex-1" />
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 rounded-xl bg-warm-100 text-txt-secondary font-medium hover:bg-warm-200 transition-colors"
-              >
-                取消
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                className="px-6 py-2 rounded-xl bg-accent-orange text-white font-medium hover:bg-orange-600 transition-colors"
-              >
-                保存
-              </button>
-            </div>
           </form>
+
+          {/* 底部按钮（固定在表单下方，随表单滚动） */}
+          <div className="flex items-center gap-3 pt-2 mt-2 border-t border-warm-100">
+            {agent && onDelete && (
+              <button
+                type="button"
+                onClick={() => { onDelete(agent.id); onClose(); }}
+                className="px-4 py-2 rounded-xl text-red-500 hover:bg-red-50 font-medium transition-colors"
+              >
+                删除
+              </button>
+            )}
+            <div className="flex-1" />
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-xl bg-warm-100 text-txt-secondary font-medium hover:bg-warm-200 transition-colors"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              className="px-6 py-2 rounded-xl bg-accent-orange text-white font-medium hover:bg-orange-600 transition-colors"
+            >
+              保存
+            </button>
+          </div>
         </div>
       </div>
     </div>
