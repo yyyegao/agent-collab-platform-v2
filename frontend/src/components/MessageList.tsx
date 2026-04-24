@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Message } from '../types';
 import { useAppStore } from '../store';
-import { ChatActions } from './ChatActions';
+
 
 interface MessageBubbleProps {
   message: Message;
@@ -62,11 +62,7 @@ export const MessageList: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      {currentId && (
-        <div className="px-4 py-2 bg-white border-b border-warm-200 flex justify-end shrink-0">
-          <ChatActions sessionId={currentSingleSessionId || undefined} groupId={currentGroupId || undefined} />
-        </div>
-      )}
+      
       <div ref={listRef} className="flex-1 overflow-y-auto p-4 bg-warm-100">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
