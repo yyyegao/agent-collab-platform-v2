@@ -53,11 +53,11 @@ export const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
 
   return (
     <div className="modal-overlay-warm" onClick={onClose}>
-      <div className="modal-content-warm max-w-lg" onClick={e => e.stopPropagation()}>
-        <div className="p-6">
-          {/* 头部 */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-txt-primary">创建群聊</h2>
+      <div className="modal-content-warm max-w-lg max-h-[90vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+        {/* Header - fixed */}
+        <div className="shrink-0 px-6 py-4 border-b border-warm-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-txt-primary">创建群聊</h2>
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-full hover:bg-warm-100 flex items-center justify-center text-txt-muted"
@@ -67,7 +67,10 @@ export const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
               </svg>
             </button>
           </div>
+        </div>
 
+        {/* Scrollable body */}
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4">
           {/* 群聊名称 */}
           <div className="mb-4">
             <label className="label-warm">群聊名称 *</label>
@@ -92,14 +95,14 @@ export const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
           </div>
 
           {/* 选择 Agent */}
-          <div>
+          <div className="mb-4">
             <label className="label-warm">
               选择 Agent (至少 2 个) *
               <span className="ml-2 text-txt-muted font-normal">
                 ({selectedAgents.length} 已选择)
               </span>
             </label>
-            <div className="space-y-2 max-h-[300px] overflow-y-auto">
+            <div className="space-y-2">
               {agents.map(agent => {
                 const isSelected = selectedAgents.includes(agent.id);
                 return (
@@ -137,23 +140,23 @@ export const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
               })}
             </div>
           </div>
+        </div>
 
-          {/* 按钮组 */}
-          <div className="flex gap-3 pt-6">
-            <button
-              onClick={onClose}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-warm-100 text-txt-secondary font-medium hover:bg-warm-200 transition-colors"
-            >
-              取消
-            </button>
-            <button
-              onClick={handleCreate}
-              disabled={!groupName.trim() || selectedAgents.length < 2}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-accent-orange text-white font-medium hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed btn-warm"
-            >
-              创建群聊
-            </button>
-          </div>
+        {/* Footer buttons - fixed */}
+        <div className="shrink-0 px-6 py-4 border-t border-warm-200 flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 px-4 py-2.5 rounded-xl bg-warm-100 text-txt-secondary font-medium hover:bg-warm-200 transition-colors"
+          >
+            取消
+          </button>
+          <button
+            onClick={handleCreate}
+            disabled={!groupName.trim() || selectedAgents.length < 2}
+            className="flex-1 px-4 py-2.5 rounded-xl bg-accent-orange text-white font-medium hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed btn-warm"
+          >
+            创建群聊
+          </button>
         </div>
       </div>
     </div>
