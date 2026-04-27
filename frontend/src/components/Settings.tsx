@@ -277,11 +277,11 @@ export const Settings: React.FC = () => {
         <div className="space-y-2 text-sm mb-4">
           <div className="flex justify-between">
             <span className="text-txt-muted">版本</span>
-            <span className="text-txt-primary font-medium">v1.0.0</span>
+            <span className="text-txt-primary font-medium">v1.1.0</span>
           </div>
           <div className="flex justify-between">
             <span className="text-txt-muted">构建日期</span>
-            <span className="text-txt-primary">2026-03-31</span>
+            <span className="text-txt-primary">2026-04-27</span>
           </div>
           <div className="flex justify-between">
             <span className="text-txt-muted">后端状态</span>
@@ -292,8 +292,19 @@ export const Settings: React.FC = () => {
         <div className="divider-warm my-4" />
         
         <p className="text-sm text-txt-muted">
-          Agent 协作平台 - 支持多 Agent 群聊协作，每个 Agent 可独立配置模型和参数。
+          Agent 协作平台 v1.1.0 - 支持多 Agent 群聊协作，每个 Agent 可独立配置模型和参数，提供头像选择、Toast 通知等交互优化。
         </p>
+
+        {/* 最近更新 */}
+        <div className="mt-4 pt-4 border-t border-warm-200">
+          <h4 className="text-sm font-semibold text-txt-primary mb-2">最近更新</h4>
+          <ul className="text-xs text-txt-muted space-y-1.5">
+            <li>• <span className="text-accent-orange">2026-04-27</span> 修复 Agent 创建时字段丢失问题，新增 Toast 通知</li>
+            <li>• <span className="text-accent-orange">2026-04-27</span> 新增 DiceBear 头像选择器（8种风格48个预设）</li>
+            <li>• <span className="text-accent-orange">2026-04-27</span> 修复 AgentConfigModal 弹窗样式问题</li>
+            <li>• <span className="text-txt-muted">2026-04-24</span> 初始版本发布</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
