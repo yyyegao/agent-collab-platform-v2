@@ -50,9 +50,13 @@ export const AgentChatList: React.FC<AgentChatListProps> = ({
             >
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-semibold text-sm"
-                    style={{ background: 'linear-gradient(135deg, #e85d04, #dc4a00)' }}>
-                    {agent.name[0]}
+                  <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center text-white font-semibold text-sm"
+                    style={{ background: agent.avatar ? 'transparent' : 'linear-gradient(135deg, #e85d04, #dc4a00)' }}>
+                    {agent.avatar ? (
+                      <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                    ) : (
+                      agent.name[0]
+                    )}
                   </div>
                   {agent.status === 'online' && (
                     <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full status-online border-2 border-white" />
@@ -83,8 +87,13 @@ export const AgentChatList: React.FC<AgentChatListProps> = ({
               className="card-warm p-3 cursor-pointer mb-2 hover:border-accent-orange transition-all"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-semibold text-sm bg-warm-200">
-                  {agent.name[0]}
+                <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center text-white font-semibold text-sm"
+                  style={{ background: agent.avatar ? 'transparent' : '#d6d3d1' }}>
+                  {agent.avatar ? (
+                    <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                  ) : (
+                    agent.name[0]
+                  )}
                 </div>
                 <div className="flex-1">
                   <h3 className="font-medium text-txt-primary text-sm">{agent.name}</h3>

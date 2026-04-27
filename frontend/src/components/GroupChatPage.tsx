@@ -137,13 +137,18 @@ export const GroupChatPage: React.FC<GroupChatPageProps> = ({ group }) => {
                 {groupAgents.slice(0, 3).map((agent, idx) => (
                   <div
                     key={agent.id}
-                    className="absolute w-6 h-6 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xs font-bold"
+                    className="absolute w-6 h-6 rounded-lg flex items-center justify-center text-white text-xs font-bold overflow-hidden"
                     style={{
                       left: idx * 3,
                       zIndex: 3 - idx,
+                      background: agent.avatar ? 'transparent' : 'linear-gradient(135deg, #e85d04, #dc4a00)',
                     }}
                   >
-                    {agent.name[0]}
+                    {agent.avatar ? (
+                      <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                    ) : (
+                      agent.name[0]
+                    )}
                   </div>
                 ))}
               </div>
@@ -186,8 +191,13 @@ export const GroupChatPage: React.FC<GroupChatPageProps> = ({ group }) => {
                   <div className={`max-w-[75%] ${isUser ? 'items-end' : 'items-start'} flex flex-col`}>
                     {!isUser && agent && (
                       <div className="flex items-center gap-2 mb-1">
-                        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xs font-bold">
-                          {agent.name[0]}
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center text-white text-xs font-bold overflow-hidden"
+                          style={{ background: agent.avatar ? 'transparent' : 'linear-gradient(135deg, #e85d04, #dc4a00)' }}>
+                          {agent.avatar ? (
+                            <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                          ) : (
+                            agent.name[0]
+                          )}
                         </div>
                         <span className="text-sm font-medium text-gray-700">{agent.name}</span>
                       </div>

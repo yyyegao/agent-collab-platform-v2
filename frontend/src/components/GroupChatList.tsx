@@ -81,14 +81,18 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
                         {groupAgents.slice(0, 3).map((agent, idx) => (
                           <div
                             key={agent.id}
-                            className="absolute w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-semibold ring-2 ring-white"
+                            className="absolute w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-semibold ring-2 ring-white overflow-hidden"
                             style={{
                               left: idx * 4,
                               zIndex: 10 - idx,
-                              background: idx === 0 ? 'linear-gradient(135deg, #e85d04, #dc4a00)' : idx === 1 ? 'linear-gradient(135deg, #7c3aed, #6d28d9)' : 'linear-gradient(135deg, #0d9488, #0f766e)',
+                              background: agent.avatar ? 'transparent' : (idx === 0 ? 'linear-gradient(135deg, #e85d04, #dc4a00)' : idx === 1 ? 'linear-gradient(135deg, #7c3aed, #6d28d9)' : 'linear-gradient(135deg, #0d9488, #0f766e)'),
                             }}
                           >
-                            {agent.name[0]}
+                            {agent.avatar ? (
+                              <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                            ) : (
+                              agent.name[0]
+                            )}
                           </div>
                         ))}
                         {groupAgents.length > 3 && (

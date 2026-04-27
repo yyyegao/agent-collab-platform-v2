@@ -17,8 +17,15 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
       <div className={`max-w-[75%] ${isUser ? 'items-end' : 'items-start'} flex flex-col`}>
         {!isUser && agent && (
           <div className="flex items-center gap-2 mb-1.5 ml-1">
-            <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-xs font-semibold">
-              {agent.name[0]}
+            <div
+              className="w-7 h-7 rounded-xl overflow-hidden flex items-center justify-center text-white text-xs font-semibold"
+              style={{ background: agent.avatar ? 'transparent' : 'linear-gradient(135deg, #e85d04, #dc4a00)' }}
+            >
+              {agent.avatar ? (
+                <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+              ) : (
+                agent.name[0]
+              )}
             </div>
             <span className="text-sm font-medium text-txt-secondary">{agent.name}</span>
           </div>
@@ -40,9 +47,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
 export const MessageList: React.FC = () => {
   const { chatMode, groupChats, currentGroupId, sessions, currentSingleSessionId } = useAppStore();
-  
+
   const currentId = chatMode === 'group' ? currentGroupId : currentSingleSessionId;
-  
+
   let messages: Message[] = [];
   if (chatMode === 'group') {
     const currentGroup = groupChats.find(g => g.id === currentGroupId);
@@ -51,7 +58,7 @@ export const MessageList: React.FC = () => {
     const currentSingleSession = sessions.find(s => s.id === currentSingleSessionId);
     messages = currentSingleSession?.messages || [];
   }
-  
+
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
