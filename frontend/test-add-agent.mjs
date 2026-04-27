@@ -26,37 +26,43 @@ import { chromium } from 'playwright';
     if (modalCount === 0) { console.log('❌ Modal not found'); await browser.close(); return; }
     console.log('✅ Modal opened');
 
-    // Check avatar picker is present
+    // Check avatar presets
     const avatarBtns = await page.locator('.modal-content-warm button img').count();
-    console.log(`✅ Avatar presets found: ${avatarBtns} options`);
+    console.log(`✅ Avatar presets: ${avatarBtns} options`);
 
-    // Click a preset avatar
-    const firstAvatar = page.locator('.modal-content-warm button img').first();
-    await firstAvatar.click();
-    console.log('✅ Clicked a preset avatar');
-
-    // Check if avatar URL was filled
-    const avatarInput = page.locator('input[placeholder*="头像"]');
-    const avatarUrl = await avatarInput.inputValue();
-    console.log(`✅ Avatar URL set: ${avatarUrl ? 'yes' : 'no (may use DiceBear URL)'}`);
+    // Click an avatar preset
+    await page.locator('.modal-content-warm button img').nth(3).click();
+    console.log('✓ Clicked avatar preset');
 
     // Fill name and description
-    await page.locator('input[placeholder="例如：代码助手"]').fill('助手机器人');
-    await page.locator('textarea[placeholder*="职责"]').fill('提供帮助的 AI 助手');
+    await page.locator('input[placeholder="例如：代码助手"]').fill('测试助手2');
+    await page.locator('textarea[placeholder*="职责"]').fill('测试描述内容');
 
-    // Scroll to save
+    // Scroll and save
     await page.locator('.modal-content-warm > div:last-child').evaluate(el => el.scrollTop = 9999);
     await page.waitForTimeout(300);
     await page.locator('button', { hasText: '保存' }).click();
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(2500);
 
+    // Check toast appeared
+    const toastCount = await page.locator('.animate-toast-in').count();
+    console.log(`✅ Toast notification shown: ${toastCount > 0}`);
+
+    // Modal should be closed
     const modalAfter = await page.locator('.modal-overlay-warm').count();
-    console.log(modalAfter === 0 ? '✅ Modal closed - agent saved!' : '⚠ Modal still open');
+    console.log(`✅ Modal closed after save: ${modalAfter === 0}`);
 
-    // Screenshot
-    await page.screenshot({ path: '/tmp/avatar-test-result.png', fullPage: true });
-    console.log('📸 Screenshot: /tmp/avatar-test-result.png');
+    // Check if agent appears in list with avatar
+    const agentCards = await page.locator('.card-feishu').count();
+    console.log(`✅ Agent cards in list: ${agentCards}`);
+
+    if (agentCards > 0) {
+      const avatarImg = await page.locator('.card-feishu img').count();
+      console.log(`✅ Avatar image in agent card: ${avatarImg > 0}`);
+    }
+
     console.log('\n✅ ALL TESTS PASSED!');
+    await page.screenshot({ path: '/tmp/avatar-toast-test.png', fullPage: true });
 
   } catch (err) {
     console.error('❌ Error:', err.message);

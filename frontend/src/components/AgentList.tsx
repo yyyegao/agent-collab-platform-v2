@@ -36,10 +36,39 @@ const SortableAgentCard: React.FC<{ agent: AgentConfig; onEdit: (a: AgentConfig)
   );
 };
 
+// Toast 组件
+const Toast: React.FC<{ message: string; type: 'success' | 'error'; onClose: () => void }> = ({ message, type, onClose }) => (
+  <div className={`fixed top-4 right-4 z-[100] px-5 py-3 rounded-xl shadow-lg flex items-center gap-3 animate-toast-in ${
+    type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+  }`}>
+    {type === 'success' ? (
+      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+      </svg>
+    ) : (
+      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    )}
+    <span className="font-medium">{message}</span>
+    <button onClick={onClose} className="ml-1 opacity-70 hover:opacity-100">
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+);
+
 export const AgentList: React.FC = () => {
   const { agents, setAgents, addAgent, updateAgent, deleteAgent } = useAppStore();
   const [showModal, setShowModal] = useState(false);
   const [editingAgent, setEditingAgent] = useState<AgentConfig | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -60,16 +89,16 @@ export const AgentList: React.FC = () => {
 
   const handleSaveAgent = async (agent: AgentConfig) => {
     try {
-      if (editingAgent) { await updateAgent(agent); }
-      else { await addAgent(agent); }
+      if (editingAgent) { await updateAgent(agent); showToast('Agent 更新成功', 'success'); }
+      else { await addAgent(agent); showToast('Agent 创建成功', 'success'); }
       setShowModal(false); setEditingAgent(null);
-    } catch (error: any) { alert(`保存失败: ${error.message}`); }
+    } catch (error: any) { showToast(`保存失败: ${error.message}`, 'error'); }
   };
 
   const handleDeleteAgent = async (id: string) => {
     if (confirm('确定要删除这个 Agent 吗？')) {
-      try { await deleteAgent(id); setShowModal(false); setEditingAgent(null); }
-      catch (error: any) { alert(`删除失败: ${error.message}`); }
+      try { await deleteAgent(id); showToast('Agent 已删除', 'success'); setShowModal(false); setEditingAgent(null); }
+      catch (error: any) { showToast(`删除失败: ${error.message}`, 'error'); }
     }
   };
 
@@ -131,6 +160,9 @@ export const AgentList: React.FC = () => {
       )}
 
       <AgentConfigModal agent={editingAgent} isOpen={showModal} onClose={() => { setShowModal(false); setEditingAgent(null); }} onSave={handleSaveAgent} onDelete={handleDeleteAgent} />
+
+      {/* Toast 通知 */}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 };
