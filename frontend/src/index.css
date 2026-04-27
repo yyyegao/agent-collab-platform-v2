@@ -179,7 +179,7 @@ body {
   backdrop-filter: blur(4px);
 }
 .modal-content-warm {
-  @apply rounded-2xl w-full mx-4 overflow-auto;
+  @apply rounded-2xl w-full mx-4 overflow-hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   animation: modalSlideInWarm 0.2s ease-out;
