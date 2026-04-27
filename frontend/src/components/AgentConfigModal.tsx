@@ -26,6 +26,22 @@ const defaultCapabilities = [
   '翻译', '润色', '总结', '问答'
 ];
 
+// DiceBear 预设头像风格
+const avatarStyles = [
+  { style: 'adventurer', label: '冒险家', seeds: ['Aria', 'Blaze', 'Cleo', 'Drake', 'Echo', 'Faye'] },
+  { style: 'avataaars', label: '卡通', seeds: ['Gino', 'Iris', 'Jax', 'Kira', 'Liam', 'Mia'] },
+  { style: 'bottts', label: '机器人', seeds: ['Nox', 'Olive', 'Paul', 'Quinn', 'Rex', 'Sara'] },
+  { style: 'lorelei', label: '人物', seeds: ['Theo', 'Uma', 'Vera', 'Wade', 'Xena', 'Yuri'] },
+  { style: 'micah', label: '简约', seeds: ['Zara', 'Axel', 'Bella', 'Cole', 'Dora', 'Evan'] },
+  { style: 'notionists', label: 'Notion', seeds: ['Fay', 'Gus', 'Hope', 'Ivan', 'Jade', 'Kane'] },
+  { style: 'personas', label: '艺术', seeds: ['Luna', 'Milo', 'Nora', 'Orion', 'Pip', 'Raya'] },
+  { style: 'pixel-art', label: '像素', seeds: ['Sam', 'Tara', 'Uri', 'Vince', 'Wren', 'Xin'] },
+];
+
+// 获取预设头像 URL
+const getAvatarUrl = (style: string, seed: string) =>
+  `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}&size=80`;
+
 export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
   agent,
   isOpen,
@@ -122,24 +138,55 @@ export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
         {/* Scrollable body */}
         <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* 头像和名称 */}
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold shrink-0">
-                {formData.avatar ? (
-                  <img src={formData.avatar} alt={formData.name} className="w-full h-full object-cover rounded-2xl" />
-                ) : (
-                  formData.name[0]?.toUpperCase() || 'A'
-                )}
+            {/* 头像选择 */}
+            <div>
+              <label className="label-warm">选择头像</label>
+              <div className="flex items-start gap-4">
+                {/* 预览 */}
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold shrink-0 overflow-hidden border-2 border-warm-200">
+                  {formData.avatar ? (
+                    <img src={formData.avatar} alt="avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    formData.name[0]?.toUpperCase() || '?'
+                  )}
+                </div>
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    value={formData.avatar || ''}
+                    onChange={e => setFormData(prev => ({ ...prev, avatar: e.target.value }))}
+                    placeholder="或输入头像 URL..."
+                    className="input-warm text-sm"
+                  />
+                </div>
               </div>
-              <div className="flex-1">
-                <label className="label-warm">头像 URL</label>
-                <input
-                  type="text"
-                  value={formData.avatar || ''}
-                  onChange={e => setFormData(prev => ({ ...prev, avatar: e.target.value }))}
-                  placeholder="https://..."
-                  className="input-warm"
-                />
+
+              {/* 预设头像网格 */}
+              <div className="mt-3 space-y-3">
+                {avatarStyles.map(({ style, label, seeds }) => (
+                  <div key={style}>
+                    <div className="text-xs text-txt-muted mb-1.5">{label}</div>
+                    <div className="flex gap-2 flex-wrap">
+                      {seeds.map(seed => {
+                        const url = getAvatarUrl(style, seed);
+                        const isSelected = formData.avatar === url;
+                        return (
+                          <button
+                            key={seed}
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, avatar: url }))}
+                            className={`w-10 h-10 rounded-xl overflow-hidden border-2 transition-all hover:scale-110 ${
+                              isSelected ? 'border-accent-orange ring-2 ring-accent-orange/30' : 'border-transparent hover:border-warm-300'
+                            }`}
+                            title={seed}
+                          >
+                            <img src={url} alt={seed} className="w-full h-full" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 

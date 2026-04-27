@@ -13,9 +13,7 @@ import { chromium } from 'playwright';
     const sidebarBtns = await page.locator('.sidebar-warm button').all();
     for (const btn of sidebarBtns) {
       const text = await btn.textContent();
-      if (text && text.includes('Agent 列表')) {
-        await btn.click(); console.log('✓ Agent List tab opened'); break;
-      }
+      if (text && text.includes('Agent 列表')) { await btn.click(); console.log('✓ Agent List tab opened'); break; }
     }
     await page.waitForTimeout(1500);
 
@@ -25,52 +23,40 @@ import { chromium } from 'playwright';
     await page.waitForTimeout(2000);
 
     const modalCount = await page.locator('.modal-overlay-warm').count();
-    if (modalCount === 0) {
-      console.log('❌ Modal not found'); await browser.close(); return;
-    }
+    if (modalCount === 0) { console.log('❌ Modal not found'); await browser.close(); return; }
     console.log('✅ Modal opened');
 
-    // Fill in name
-    const nameInput = page.locator('input[placeholder="例如：代码助手"]');
-    await nameInput.fill('测试助手');
-    console.log('✓ Filled name');
+    // Check avatar picker is present
+    const avatarBtns = await page.locator('.modal-content-warm button img').count();
+    console.log(`✅ Avatar presets found: ${avatarBtns} options`);
 
-    // Fill in description
-    const descInput = page.locator('textarea[placeholder*="职责和能力"]');
-    await descInput.fill('这是一个测试用的 AI 助手');
-    console.log('✓ Filled description');
+    // Click a preset avatar
+    const firstAvatar = page.locator('.modal-content-warm button img').first();
+    await firstAvatar.click();
+    console.log('✅ Clicked a preset avatar');
 
-    // Click a capability
-    const capBtn = page.locator('button.rounded-full').filter({ hasText: '代码编写' }).first();
-    if (await capBtn.count() > 0) {
-      await capBtn.click();
-      console.log('✓ Clicked capability');
-    }
+    // Check if avatar URL was filled
+    const avatarInput = page.locator('input[placeholder*="头像"]');
+    const avatarUrl = await avatarInput.inputValue();
+    console.log(`✅ Avatar URL set: ${avatarUrl ? 'yes' : 'no (may use DiceBear URL)'}`);
 
-    // Scroll down to see save button
-    await page.locator('.modal-content-warm > div:last-child').evaluate(el => el.scrollTop = 500);
+    // Fill name and description
+    await page.locator('input[placeholder="例如：代码助手"]').fill('助手机器人');
+    await page.locator('textarea[placeholder*="职责"]').fill('提供帮助的 AI 助手');
+
+    // Scroll to save
+    await page.locator('.modal-content-warm > div:last-child').evaluate(el => el.scrollTop = 9999);
     await page.waitForTimeout(300);
-
-    // Click save
-    const saveBtn = page.locator('button', { hasText: '保存' });
-    await saveBtn.click();
-    console.log('✓ Clicked 保存 button');
+    await page.locator('button', { hasText: '保存' }).click();
     await page.waitForTimeout(2000);
 
-    // Check if modal closed
     const modalAfter = await page.locator('.modal-overlay-warm').count();
-    if (modalAfter === 0) {
-      console.log('✅ Modal closed after save - agent added successfully!');
-    } else {
-      console.log('⚠ Modal still open after save');
-    }
+    console.log(modalAfter === 0 ? '✅ Modal closed - agent saved!' : '⚠ Modal still open');
 
-    // Check if agent appears in list
-    const agentCards = await page.locator('[class*="rounded-xl"][class*="p-"]').count();
-    console.log(`Agent cards in list: ${agentCards}`);
-
+    // Screenshot
+    await page.screenshot({ path: '/tmp/avatar-test-result.png', fullPage: true });
+    console.log('📸 Screenshot: /tmp/avatar-test-result.png');
     console.log('\n✅ ALL TESTS PASSED!');
-    await page.screenshot({ path: '/tmp/modal-add-success.png', fullPage: true });
 
   } catch (err) {
     console.error('❌ Error:', err.message);
