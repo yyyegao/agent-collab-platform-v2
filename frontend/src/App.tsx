@@ -169,7 +169,7 @@ const App: React.FC = () => {
         onMouseLeave={() => setSidebarExpanded(false)}
         className={`hidden md:flex md:fixed md:left-0 md:top-0 md:bottom-0 sidebar-warm flex-col z-10 transition-all duration-300 ease-in-out ${sidebarExpanded ? 'md:w-64' : 'md:w-16'}`}
       >
-        <div className={`p-3 border-b border-warm-200 flex items-center ${sidebarExpanded ? 'justify-between' : 'justify-center'} gap-2`}>
+        <div className={`p-3 border-b border-warm-200 flex items-center ${sidebarExpanded ? 'justify-start' : 'justify-center'} gap-2`}>
           <img src="https://web-api.textin.com/ocr_image/external/c4c76097d1ef10ab.jpg" alt="logo" className={`h-8 object-contain transition-all duration-300 ${sidebarExpanded ? 'w-8' : 'w-10'}`} />
           {sidebarExpanded && (
             <div className="flex flex-col min-w-0">
