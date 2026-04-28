@@ -131,8 +131,14 @@ export default {
     }));
 
     // 添加 system prompt
-    const systemPrompt = agentConfig?.systemPrompt || config?.systemPrompt || 
+    let systemPrompt = agentConfig?.systemPrompt || config?.systemPrompt || 
       `你是一个名为 ${agentConfig?.name || '助手'} 的 AI 助手。`;
+    
+    // 将 agent 的 capabilities 追加到 system prompt
+    if (agentConfig?.capabilities && agentConfig.capabilities.length > 0) {
+      const capsText = agentConfig.capabilities.join('、');
+      systemPrompt += `\n\n【你可使用的技能】${capsText}`;
+    }
 
     // 通过后端 /api/llm/chat 代理请求，避免 CORS
     const response = await fetch('/api/llm/chat', {
