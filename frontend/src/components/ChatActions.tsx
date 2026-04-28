@@ -6,9 +6,11 @@ interface ChatActionsProps {
   sessionId?: string;
   groupId?: string;
   onImportClick?: () => void;
+  onClearAll?: () => void;
+  onSelectiveClear?: () => void;
 }
 
-export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, onImportClick }) => {
+export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, onImportClick, onClearAll, onSelectiveClear }) => {
   const { clearMessages, exportMessages, sessions } = useAppStore();
   const [showMenu, setShowMenu] = useState(false);
   const [showExport, setShowExport] = useState(false);
@@ -31,9 +33,16 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
     return true;
   })();
 
-  const handleClear = () => {
+  const handleClearAll = () => {
     if (confirm('确定要清空当前聊天记录吗？此操作不可恢复。')) {
       clearMessages(sessionId || undefined, groupId || undefined);
+    }
+    setShowMenu(false);
+  };
+
+  const handleSelectiveClear = () => {
+    if (onSelectiveClear) {
+      onSelectiveClear();
     }
     setShowMenu(false);
   };
@@ -115,18 +124,49 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
               </svg>
               导出聊天记录
             </button>
-            <button
-              onClick={handleClear}
-              disabled={!hasMessages}
-              className={`w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 ${
-                !hasMessages ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-              清空聊天记录
-            </button>
+            <div className="relative group">
+              <button
+                disabled={!hasMessages}
+                className={`w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 ${
+                  !hasMessages ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                清空聊天记录
+                <svg className="w-3 h-3 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              {/* 子菜单 */}
+              <div className="absolute left-full top-0 ml-0.5 w-36 bg-white rounded-xl shadow-lg border border-gray-200 py-1 hidden group-hover:block z-50">
+                <button
+                  onClick={handleSelectiveClear}
+                  disabled={!hasMessages}
+                  className={`w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 ${
+                    !hasMessages ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  选择性清空
+                </button>
+                <button
+                  onClick={handleClearAll}
+                  disabled={!hasMessages}
+                  className={`w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 ${
+                    !hasMessages ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  清空全部
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
