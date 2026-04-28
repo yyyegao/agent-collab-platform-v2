@@ -164,7 +164,7 @@ export const MessageList: React.FC = () => {
           </div>
         </div>
       ) : currentId ? (
-        <div className="px-4 py-2 bg-white border-b border-warm-200 flex justify-end shrink-0">
+        <div className="px-4 py-2 bg-white border-b border-warm-200 flex justify-start shrink-0">
           <ChatActions
             sessionId={currentSingleSessionId || undefined}
             groupId={currentGroupId || undefined}
