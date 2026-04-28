@@ -97,7 +97,7 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
         </button>
         
         {showMenu && (
-          <div className="absolute right-0 top-full mt-1 w-40 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
+          <div className="absolute left-0 top-full mt-1 w-40 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
             <button
               onClick={() => {
                 setShowMenu(false);
@@ -139,8 +139,8 @@ export const ChatActions: React.FC<ChatActionsProps> = ({ sessionId, groupId, on
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
-              {/* 子菜单 */}
-              <div className="absolute left-full top-0 ml-0.5 w-36 bg-white rounded-xl shadow-lg border border-gray-200 py-1 hidden group-hover:block z-50">
+              {/* 子菜单 - 向左展开 */}
+              <div className="absolute right-full top-0 mr-0.5 w-36 bg-white rounded-xl shadow-lg border border-gray-200 py-1 hidden group-hover:block z-50">
                 <button
                   onClick={handleSelectiveClear}
                   disabled={!hasMessages}
