@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '../store';
-import { ChatActions } from './ChatActions';
-import { ImportChat } from './ImportChat';
 
 export const MessageInput: React.FC = () => {
   const { 
@@ -106,9 +104,6 @@ export const MessageInput: React.FC = () => {
     textareaRef.current?.focus();
   };
 
-  // 导入组件 ref
-  const importChatRef = useRef<any>(null);
-
   // 如果是群聊模式且没有选择群聊，显示提示
   if (chatMode === 'group' && !currentGroupId) {
     return (
@@ -129,23 +124,6 @@ export const MessageInput: React.FC = () => {
 
   return (
     <div className="bg-white border-t border-warm-200 shrink-0 relative">
-      {/* 操作工具栏 */}
-      <div className="flex items-center justify-between px-3 py-1.5 border-b border-warm-100">
-        <div className="flex items-center gap-1">
-          <ImportChat 
-            sessionId={chatMode === 'single' ? currentSingleSessionId || undefined : undefined}
-            groupId={chatMode === 'group' ? currentGroupId || undefined : undefined}
-          />
-          <ChatActions 
-            sessionId={chatMode === 'single' ? currentSingleSessionId || undefined : undefined} 
-            groupId={chatMode === 'group' ? currentGroupId || undefined : undefined} 
-          />
-        </div>
-        <span className="text-xs text-txt-muted">
-          {isLoading ? '处理中...' : '@召唤群成员'}
-        </span>
-      </div>
-      
       {/* @ 群成员列表 */}
       {showMentionList && filteredGroupAgents.length > 0 && (
         <div className="absolute bottom-full left-3 right-3 mb-1 bg-white border border-warm-200 rounded-xl shadow-card max-h-48 overflow-y-auto z-50">
