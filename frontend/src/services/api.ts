@@ -134,11 +134,147 @@ export default {
     let systemPrompt = agentConfig?.systemPrompt || config?.systemPrompt || 
       `你是一个名为 ${agentConfig?.name || '助手'} 的 AI 助手。`;
     
+    // 告诉 Agent 有哪些工具可用
+    systemPrompt += `\n\n【你可使用的工具】
+当你需要执行操作时，可以通过以下工具来完成：
+- exec: 执行 Shell 命令
+- read: 读取文件
+- write: 写入文件
+- edit: 编辑文件
+- web_search: 搜索网页
+- web_fetch: 获取网页内容
+- memory_search: 搜索记忆库
+- image_generate: 生成图片
+
+当用户请求需要执行这些操作时，你应该主动调用相应的工具。`;
+    
     // 将 agent 的 capabilities 追加到 system prompt
     if (agentConfig?.capabilities && agentConfig.capabilities.length > 0) {
       const capsText = agentConfig.capabilities.join('、');
-      systemPrompt += `\n\n【你可使用的技能】${capsText}`;
+      systemPrompt += `\n\n【额外技能】${capsText}`;
     }
+
+    // OpenClaw 工具定义 (OpenAI function calling 格式)
+    const openclawTools = [
+      {
+        type: 'function' as const,
+        function: {
+          name: 'exec',
+          description: '执行 Shell 命令并返回输出结果。用于文件操作、git、系统命令等。',
+          parameters: {
+            type: 'object' as const,
+            properties: {
+              command: { type: 'string' as const, description: '要执行的 shell 命令' },
+              timeout: { type: 'integer' as const, description: '超时时间(秒)，默认30' }
+            },
+            required: ['command' as const]
+          }
+        }
+      },
+      {
+        type: 'function' as const,
+        function: {
+          name: 'read',
+          description: '读取文件内容',
+          parameters: {
+            type: 'object' as const,
+            properties: {
+              path: { type: 'string' as const, description: '文件路径' }
+            },
+            required: ['path' as const]
+          }
+        }
+      },
+      {
+        type: 'function' as const,
+        function: {
+          name: 'write',
+          description: '创建或覆盖文件',
+          parameters: {
+            type: 'object' as const,
+            properties: {
+              path: { type: 'string' as const, description: '文件路径' },
+              content: { type: 'string' as const, description: '文件内容' }
+            },
+            required: ['path' as const, 'content' as const]
+          }
+        }
+      },
+      {
+        type: 'function' as const,
+        function: {
+          name: 'edit',
+          description: '编辑文件中的特定文本',
+          parameters: {
+            type: 'object' as const,
+            properties: {
+              path: { type: 'string' as const, description: '文件路径' },
+              oldText: { type: 'string' as const, description: '要替换的原始文本' },
+              newText: { type: 'string' as const, description: '新的替换文本' }
+            },
+            required: ['path' as const, 'oldText' as const, 'newText' as const]
+          }
+        }
+      },
+      {
+        type: 'function' as const,
+        function: {
+          name: 'web_search',
+          description: '搜索网页获取实时信息',
+          parameters: {
+            type: 'object' as const,
+            properties: {
+              query: { type: 'string' as const, description: '搜索关键词' },
+              count: { type: 'integer' as const, description: '返回结果数量，默认5' }
+            },
+            required: ['query' as const]
+          }
+        }
+      },
+      {
+        type: 'function' as const,
+        function: {
+          name: 'web_fetch',
+          description: '获取网页内容并提取文本',
+          parameters: {
+            type: 'object' as const,
+            properties: {
+              url: { type: 'string' as const, description: '网页 URL' }
+            },
+            required: ['url' as const]
+          }
+        }
+      },
+      {
+        type: 'function' as const,
+        function: {
+          name: 'memory_search',
+          description: '搜索长期记忆库获取之前保存的信息',
+          parameters: {
+            type: 'object' as const,
+            properties: {
+              query: { type: 'string' as const, description: '搜索查询' }
+            },
+            required: ['query' as const]
+          }
+        }
+      },
+      {
+        type: 'function' as const,
+        function: {
+          name: 'image_generate',
+          description: '生成 AI 图片',
+          parameters: {
+            type: 'object' as const,
+            properties: {
+              prompt: { type: 'string' as const, description: '图片生成描述' },
+              size: { type: 'string' as const, description: '图片尺寸如 1024x1024' }
+            },
+            required: ['prompt' as const]
+          }
+        }
+      }
+    ];
 
     // 通过后端 /api/llm/chat 代理请求，避免 CORS
     const response = await fetch('/api/llm/chat', {
@@ -156,6 +292,7 @@ export default {
         ],
         temperature: agentConfig?.temperature ?? 0.7,
         maxTokens: agentConfig?.maxTokens ?? 4096,
+        tools: openclawTools,
       }),
     });
 
