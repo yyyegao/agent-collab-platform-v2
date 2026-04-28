@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAppStore } from './store';
 import { BottomNav, MessageList, MessageInput, AgentList, Settings } from './components';
 import { GroupChatList } from './components/GroupChatList';
@@ -23,6 +23,8 @@ const App: React.FC = () => {
   } = useAppStore();
 
   const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const currentGroup = groupChats.find(g => g.id === currentGroupId);
 
@@ -160,16 +162,23 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-warm-100">
-      {/* 桌面端侧边栏 */}
-      <div className="hidden md:flex md:fixed md:left-0 md:top-0 md:bottom-0 md:w-64 sidebar-warm flex-col z-10">
-        <div className="p-5 border-b border-warm-200">
-          <h1 className="text-lg font-bold text-txt-primary flex items-center gap-2">
-            <img src="https://web-api.textin.com/ocr_image/external/c4c76097d1ef10ab.jpg" alt="logo" className="h-8 w-auto object-contain" />
-            Agent Collab
-          </h1>
-          <p className="text-xs text-txt-muted mt-0.5">多 Agent 协作平台</p>
+      {/* 桌面端侧边栏 - 可折叠 */}
+      <div
+        ref={sidebarRef}
+        onMouseEnter={() => setSidebarExpanded(true)}
+        onMouseLeave={() => setSidebarExpanded(false)}
+        className={`hidden md:flex md:fixed md:left-0 md:top-0 md:bottom-0 sidebar-warm flex-col z-10 transition-all duration-300 ease-in-out ${sidebarExpanded ? 'md:w-64' : 'md:w-16'}`}
+      >
+        <div className={`p-3 border-b border-warm-200 flex items-center ${sidebarExpanded ? 'justify-between' : 'justify-center'} gap-2`}>
+          <img src="https://web-api.textin.com/ocr_image/external/c4c76097d1ef10ab.jpg" alt="logo" className={`h-8 object-contain transition-all duration-300 ${sidebarExpanded ? 'w-8' : 'w-10'}`} />
+          {sidebarExpanded && (
+            <div className="flex flex-col min-w-0">
+              <h1 className="text-base font-bold text-txt-primary whitespace-nowrap">Agent Collab</h1>
+              <p className="text-xs text-txt-muted whitespace-nowrap">多 Agent 协作平台</p>
+            </div>
+          )}
         </div>
-        <nav className="flex-1 p-3 space-y-0.5">
+        <nav className="flex-1 p-2 space-y-0.5">
           {[
             { id: 'chat', label: '💬 对话', tab: 'chat' as const },
             { id: 'agents', label: '🤖 Agent 列表', tab: 'agents' as const },
@@ -179,22 +188,24 @@ const App: React.FC = () => {
             <button
               key={item.id}
               onClick={() => useAppStore.getState().setActiveTab(item.tab)}
-              className={`w-full nav-warm ${activeTab === item.tab ? 'active' : ''}`}
+              className={`w-full nav-warm ${activeTab === item.tab ? 'active' : ''} ${sidebarExpanded ? 'justify-start px-3 py-2.5' : 'justify-center p-2.5'}`}
             >
-              {item.label}
+              <span className="text-base">{item.label.split(' ')[0]}</span>
+              {sidebarExpanded && <span className="ml-2 whitespace-nowrap">{item.label.split(' ').slice(1).join(' ')}</span>}
             </button>
           ))}
         </nav>
         
-        <div className="p-3 border-t border-warm-200">
+        <div className="p-2 border-t border-warm-200">
           <button
             onClick={() => {
               useAppStore.getState().setActiveTab('chat');
               setChatMode('group');
             }}
-            className="w-full nav-warm text-accent-orange"
+            className={`w-full nav-warm text-accent-orange ${sidebarExpanded ? 'justify-start px-3 py-2.5' : 'justify-center p-2.5'}`}
           >
-            👥 快速进入群聊
+            <span className="text-base">👥</span>
+            {sidebarExpanded && <span className="ml-2 whitespace-nowrap">快速进入群聊</span>}
           </button>
         </div>
       </div>
@@ -215,7 +226,10 @@ const App: React.FC = () => {
       </header>
 
       {/* 主内容区 - 唯一的滚动容器 */}
-      <div className="md:ml-64 fixed inset-0 right-0 bottom-0 pb-16 md:pb-0 overflow-y-auto">
+      <div
+        className="fixed inset-0 right-0 bottom-0 pb-16 md:pb-0 overflow-y-auto transition-all duration-300 ease-in-out"
+        style={{ marginLeft: sidebarExpanded ? '256px' : '64px' }}
+      >
         {renderContent()}
       </div>
 
