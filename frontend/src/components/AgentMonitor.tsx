@@ -10,6 +10,8 @@ const statusConfig: Record<TaskStatus, { label: string; color: string; bgColor: 
 };
 
 const AgentTaskCard: React.FC<{ task: AgentTask }> = ({ task }) => {
+  const { agents } = useAppStore();
+  const agent = agents.find(a => a.name === task.agentName);
   const status = statusConfig[task.status];
   const elapsed = Math.floor((Date.now() - task.startedAt) / 1000);
   const elapsedMin = Math.floor(elapsed / 60);
@@ -20,8 +22,12 @@ const AgentTaskCard: React.FC<{ task: AgentTask }> = ({ task }) => {
       {/* Agent 名称和状态 */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-sm font-bold">
-            {task.agentName[0]}
+          <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br from-accent-orange to-orange-600">
+            {agent?.avatar ? (
+              <img src={agent.avatar} alt={task.agentName} className="w-full h-full object-cover" />
+            ) : (
+              task.agentName[0]
+            )}
           </div>
           <span className="font-medium text-gray-900">{task.agentName}</span>
         </div>
@@ -152,8 +158,12 @@ export const AgentMonitor: React.FC = () => {
               
               return (
                 <div key={agent.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white text-sm font-bold">
-                    {agent.name[0]}
+                  <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br from-accent-orange to-orange-600">
+                    {agent.avatar ? (
+                      <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                    ) : (
+                      agent.name[0]
+                    )}
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-gray-900">{agent.name}</p>
@@ -199,8 +209,12 @@ export const AgentMonitor: React.FC = () => {
           <div className={`bg-white rounded-xl border p-4 ${statusInfo.border}`}>
             <h2 className="font-semibold text-gray-900 mb-3">当前对话 Agent 状态</h2>
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-orange to-orange-600 flex items-center justify-center text-white font-bold">
-                {agent.name[0]}
+              <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center text-white font-bold bg-gradient-to-br from-accent-orange to-orange-600">
+                {agent.avatar ? (
+                  <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                ) : (
+                  agent.name[0]
+                )}
               </div>
               <div className="flex-1">
                 <p className="font-medium text-gray-900">{agent.name}</p>
@@ -265,12 +279,16 @@ export const AgentMonitor: React.FC = () => {
                 className={`bg-white rounded-xl border p-4 ${statusInfo.borderColor}`}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold ${
+                  <div className={`w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center text-white font-bold ${
                     agent.status === 'online' ? 'bg-gradient-to-br from-accent-orange to-orange-600' :
                     agent.status === 'busy' ? 'bg-gradient-to-br from-blue-400 to-blue-500' :
                     'bg-gradient-to-br from-gray-400 to-gray-500'
                   }`}>
-                    {agent.name[0]}
+                    {agent.avatar ? (
+                      <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                    ) : (
+                      agent.name[0]
+                    )}
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">{agent.name}</p>
