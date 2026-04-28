@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../store';
 import { AgentTask, TaskStatus } from '../types';
 
@@ -9,7 +9,7 @@ const statusConfig: Record<TaskStatus, { label: string; color: string; bgColor: 
   error: { label: '出错', color: 'text-red-600', bgColor: 'bg-red-100' },
 };
 
-const AgentTaskCard: React.FC<{ task: AgentTask }> = ({ task }) => {
+const AgentTaskCard: React.FC<{ task: AgentTask; tick: number }> = ({ task, tick }) => {
   const { agents } = useAppStore();
   const agent = agents.find(a => a.name === task.agentName);
   const status = statusConfig[task.status];
@@ -31,9 +31,16 @@ const AgentTaskCard: React.FC<{ task: AgentTask }> = ({ task }) => {
           </div>
           <span className="font-medium text-gray-900">{task.agentName}</span>
         </div>
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${status.bgColor} ${status.color}`}>
-          {status.label}
-        </span>
+        <div className="flex items-center gap-2">
+          {task.currentTool && (
+            <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+              🔧 {task.currentTool}
+            </span>
+          )}
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${status.bgColor} ${status.color}`}>
+            {status.label}
+          </span>
+        </div>
       </div>
 
       {/* 任务描述 */}
@@ -111,6 +118,13 @@ const AgentTaskCard: React.FC<{ task: AgentTask }> = ({ task }) => {
 
 export const AgentMonitor: React.FC = () => {
   const { agents, tasks, chatMode, currentGroupId, groupChats, sessions, currentSingleSessionId } = useAppStore();
+  const [tick, setTick] = useState(0);
+
+  // 每秒刷新以更新计时器和状态
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(interval);
+  }, []);
   
   // 获取当前群聊
   const currentGroup = chatMode === 'group' ? groupChats.find(g => g.id === currentGroupId) : undefined;
@@ -254,7 +268,7 @@ export const AgentMonitor: React.FC = () => {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {activeTasks.map(task => (
-              <AgentTaskCard key={task.id} task={task} />
+              <AgentTaskCard key={task.id} task={task} tick={tick} />
             ))}
           </div>
         )}

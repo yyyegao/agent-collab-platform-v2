@@ -37,6 +37,8 @@ export interface AgentTask {
   updatedAt: number;
   result?: string;
   error?: string;
+  // 当前调用的工具
+  currentTool?: string;
   // Token 统计
   inputTokens?: number;
   outputTokens?: number;
