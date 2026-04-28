@@ -105,17 +105,17 @@ export default {
 
   // LLM 调用 - 通过后端代理避免 CORS
   async chat(agentId: string, messages: any[], agentConfig: any) {
-    const token = getToken();
+    const config = getConfig();
     
+    // API Key 优先级：Agent 自己的 > Settings 全局的
+    const token = agentConfig?.apiKey?.trim() || getToken();
     if (!token) {
       throw new Error('请先在设置中配置 API Key');
     }
-
-    const config = getConfig();
     
     // 处理 provider
     let provider = agentConfig?.provider || config?.provider || 'minimax';
-    if (config?.apiKey && config?.apiKey.startsWith('ak_')) {
+    if (token.startsWith('ak_')) {
       provider = 'longcat';
     }
     
